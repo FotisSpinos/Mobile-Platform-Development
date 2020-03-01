@@ -13,16 +13,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
     private TextView rawDataDisplay;
-    private String result;
+    private String stringdata;
     private Button startButton;
+
     // Traffic Scotland URLs
-    //private String urlSource = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
-    //private String urlSource = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
-    private String urlSource = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+    private String roadworksSource = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
+    private String plannedRoadworksSource = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+    private String InsidentsSource = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,7 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void startProgress()
     {
         // Run network access on a separate thread;
-        new Thread(new Task(urlSource)).start();
+        new Thread(new Task(InsidentsSource)).start();
+
+        new Thread(new Task(plannedRoadworksSource)).start();
+
+        //new Thread(new Task(roadworksSource)).start();
     } //
 
     // Need separate thread to access the internet resource over network
@@ -61,14 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void run()
         {
-
+            stringdata = "";
             URL aurl;
             URLConnection yc;
             BufferedReader in = null;
             String inputLine = "";
-
-
-            Log.e("MyTag","in run");
 
             try
             {
@@ -81,17 +84,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //
                 //
                 //
+                in.readLine();
+
                 while ((inputLine = in.readLine()) != null)
                 {
-                    result = result + inputLine;
-                    Log.e("MyTag",inputLine);
-
+                    stringdata = stringdata + inputLine;
                 }
                 in.close();
             }
             catch (IOException ae)
             {
-                Log.e("MyTag", "ioexception");
+                Log.e("IO Exception: ", "Unable to read data from source: " + url.toString() + " " + ae.getLocalizedMessage());
             }
 
             //
@@ -106,11 +109,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
-                    rawDataDisplay.setText(result);
+                    rawDataDisplay.setText(stringdata);
                 }
             });
-        }
 
+
+            LinkedList<RssFeedItem> insidents = RssFeedItemFactory.CreateRoadWorks(stringdata);
+        }
     }
 
 } // End of MainActivity
