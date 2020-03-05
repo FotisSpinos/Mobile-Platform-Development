@@ -1,5 +1,9 @@
 package com.example.mobileplatformdev;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RssFeedItem {
@@ -7,12 +11,13 @@ public class RssFeedItem {
     private String title;
     private Date endDate;
     private Point point;
-    private ItemDescription description;
+    private ItemDescription itemDescription;
 
     // default constructor
     public RssFeedItem()
     {
-        description = new ItemDescription();
+        title = "NULL";
+        itemDescription = new ItemDescription();
     }
 
     /* GETTERS*/
@@ -22,10 +27,7 @@ public class RssFeedItem {
         return point;
     }
 
-    public ItemDescription GetItemDescription()
-    {
-        return description;
-    }
+    public ItemDescription GetItemDescription() { return itemDescription; }
 
     public String GetTitle()
     {
@@ -51,16 +53,9 @@ public class RssFeedItem {
 
     public void SetItemDescription(String description)
     {
-        this.description.SetDescription(description);
+
     }
 
-    public void SetItemDescription(String description, Date startDate)
-    {
-        this.description.SetDescription(description);
-    }
+    public void SetItemDescription(ItemDescription itemDescription) { this.itemDescription = itemDescription; }
 
-    public void SetItemDescription(String description, Date startDate, Date endDate)
-    {
-        this.description.SetDescription(description);
-    }
 }

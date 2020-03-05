@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         // Run network access on a separate thread;
         new Thread(new Task(InsidentsSource)).start();
-
-        new Thread(new Task(plannedRoadworksSource)).start();
+        //new Thread(new Task(plannedRoadworksSource)).start();
 
         //new Thread(new Task(roadworksSource)).start();
     } //
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
-                    rawDataDisplay.setText(stringdata);
+                    //rawDataDisplay.setText(stringdata);
                 }
             });
 
