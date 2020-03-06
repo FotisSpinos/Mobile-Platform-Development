@@ -60,8 +60,12 @@ public class RssFeedItemFactory
                     }
                     else if (xpp.getName().equalsIgnoreCase("description"))
                     {
-                       String tmp = xpp.nextText();
-                       feedItem.SetItemDescription(ItemDescriptionFactory.CreateItemDescription(tmp));
+                       //String tmp = xpp.nextText();
+                       //feedItem.SetItemDescription(ItemDescriptionFactory.CreateItemDescription(tmp));
+
+                        String[] supportedTags = {"", ""};
+                        Description descTemp = new Description(supportedTags, xmlSource);
+                        int tempInt =0 ;
                     }
                     else if (xpp.getName().equalsIgnoreCase("point"))
                     {
