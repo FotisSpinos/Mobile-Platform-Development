@@ -9,15 +9,14 @@ import java.util.Date;
 public class RssFeedItem {
 
     private String title;
-    private Date endDate;
     private Point point;
-    private ItemDescription itemDescription;
+    public Description description;
 
     // default constructor
     public RssFeedItem()
     {
         title = "NULL";
-        itemDescription = new ItemDescription();
+
     }
 
     /* GETTERS*/
@@ -27,19 +26,14 @@ public class RssFeedItem {
         return point;
     }
 
-    public ItemDescription GetItemDescription() { return itemDescription; }
-
     public String GetTitle()
     {
         return title;
     }
 
-    /* SETTERS */
+    public Object GetDescriptionElement(String tag) { return description.GetItem(tag); }
 
-    public void SetEndDate(Date endDate)
-    {
-        this.endDate = endDate;
-    }
+    /* SETTERS */
 
     public void SetPoint(String point)
     {
@@ -51,11 +45,5 @@ public class RssFeedItem {
         this.title = title;
     }
 
-    public void SetItemDescription(String description)
-    {
-
-    }
-
-    public void SetItemDescription(ItemDescription itemDescription) { this.itemDescription = itemDescription; }
-
+    public void SetItemDescription(Description description) { this.description = description; }
 }

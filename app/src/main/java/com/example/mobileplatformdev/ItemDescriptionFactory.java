@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ItemDescriptionFactory {
-
-
+}
+/*
     public static ItemDescription CreatePlannedRoadDesc(String xmlDesc) {
 
         // Create a new item description
@@ -127,3 +127,5 @@ public class ItemDescriptionFactory {
     }
 
 }
+
+ */
