@@ -1,13 +1,9 @@
 package com.example.mobileplatformdev;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(MainActivity.this, mapActivity.class);
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
         startActivity(intent);
 
         // instantiate loaders
