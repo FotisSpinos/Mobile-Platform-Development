@@ -14,13 +14,8 @@ import java.util.LinkedList;
 
 public class RssFeedItemFactory
 {
-
+    // default constructor
     private RssFeedItemFactory() {
-    }
-
-    //public static Insidents CreateRoadWork()
-    {
-    //    return null;
     }
 
     // Creates a linked list of roadworks from the xml source
@@ -75,13 +70,18 @@ public class RssFeedItemFactory
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
                         rssFeedItems.add(feedItem);
+
+                        /*  FOR DEBUGGIN ONLY - REMOVE LATER
                         Log.println(Log.INFO,"Item Added1","Item added: " +
                                 "\n Title: " + feedItem.GetTitle() +
-                                "\n Description: " + feedItem.GetDescriptionElement("Start Date").toString() +
+                                "\n Start Date: " + feedItem.GetDescriptionElement("Start Date").toString() +
+                                "\n End Date: " + feedItem.GetDescriptionElement("End Date").toString() +
+                                //"\n Delay Information: " + feedItem.GetDescriptionElement("Delay Information").toString() +
                                 "\n Get point X: " +  Double.toString(feedItem.GetPoint().GetX()) +
                                 "\n Get point Y: " + Double.toString(feedItem.GetPoint().GetY()) +
                                 "\n \n"
                         );
+                         */
                     }
                 }
 

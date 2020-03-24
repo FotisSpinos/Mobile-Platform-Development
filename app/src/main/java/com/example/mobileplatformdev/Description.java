@@ -2,14 +2,7 @@ package com.example.mobileplatformdev;
 
 import android.util.Log;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Description {
     // the tags supported
@@ -26,6 +19,13 @@ public class Description {
 
         int lastDateIndex = StoreDates(xmlDescriptionData);
 
+        // if no dates are found we can assume that the string represents an insident
+        if(lastDateIndex == 0 &&
+        descriptionEntities.isEmpty())
+        {
+            descriptionEntities.put("Insident", xmlDescriptionData);
+            return;
+        }
         StoreRemainingEntities(lastDateIndex, xmlDescriptionData);
 
         this.xmlDescriptionData = xmlDescriptionData;
@@ -46,22 +46,10 @@ public class Description {
                         //store tag and value
                         tag = xmlDescriptionData.substring(elementIndex, y);
                         String stringValue = xmlDescriptionData.substring(y + 2, i + 1);
-                        value = xmlDescriptionData.substring(y + 2, i + 1);    // the only difference, optimise this in a function?
+                        //value = xmlDescriptionData.substring(y + 2, i + 1);    // the only difference, optimise this in a function?
 
 
-                        // parse string to date
-                        SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM YYYY - HH:mm");
-                        Date endDate = new Date();
-
-                        try {
-                            value = formatter.parse(stringValue);
-
-                            // return a planned road works description
-
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        value = ParseUtils.ParseToRSSDate(stringValue);
 
                         // add rss element
                         descriptionEntities.put(tag, value);
@@ -78,8 +66,9 @@ public class Description {
                     if (xmlDescriptionData.charAt(y) == ':') {
                         //store tag and value
                         tag = xmlDescriptionData.substring(elementIndex, y);
-                        value = xmlDescriptionData.substring(y + 2, i);    // the only difference, optimise this in a function?
+                        String stringValue = xmlDescriptionData.substring(y + 2, i);    // the only difference, optimise this in a function?
 
+                        value = ParseUtils.ParseToRSSDate(stringValue);
                         // add rss element
                         descriptionEntities.put(tag, value);
                         elementIndex = i + 6;
@@ -101,6 +90,10 @@ public class Description {
 
     // stores the remaining entities found between the start index and the end of the string
     private void StoreRemainingEntities(int startIndex, String xmlDescriptionData) {
+
+        if(startIndex >= xmlDescriptionData.length())
+            return;
+
         int elementIndex = xmlDescriptionData.length() - 1;
         Object value = "";
         String tag = "";
@@ -114,8 +107,6 @@ public class Description {
                         continue;
                     encounter = false;
 
-                    Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(i) + " to: " + Integer.toString(elementIndex));
-
                     tag = xmlDescriptionData.substring(i, elementIndex);
                     descriptionEntities.put(tag, value);
 
@@ -124,11 +115,11 @@ public class Description {
 
                 case ':':
                     if (!encounter) {
-                        value = xmlDescriptionData.substring(i + 2, elementIndex + 1);
+                        value = xmlDescriptionData.substring(i + 2, elementIndex);  // elementIndex + 1
                         elementIndex = i - 1;
                         encounter = true;
                     } else if (encounter) {
-                        tag = xmlDescriptionData.substring(i + 2, elementIndex + 1);
+                        tag = xmlDescriptionData.substring(i + 2, elementIndex); // elementIndex + 1
                         descriptionEntities.put(tag, value);
 
                         //change this later
@@ -139,8 +130,10 @@ public class Description {
             }
         }
 
+        Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(startIndex) + " to: " + Integer.toString(elementIndex));
+
         // add the final element
-        tag = xmlDescriptionData.substring(startIndex, elementIndex);
+        tag = xmlDescriptionData.substring(startIndex, elementIndex + 1);
 
         descriptionEntities.put(tag, value);
     }
