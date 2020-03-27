@@ -17,10 +17,11 @@ public class RssDataLoaderHelper
     }
 
     // Creates a linked list of roadworks from the xml source
-    public static Hashtable<String, RssFeedItem> GetRecordedData(String xmlSource, StoreRssItemsAsyncActivity activity)
+    public static void GetRecordedData(String xmlSource)
     {
-        RssFeedItem feedItem = null;
-        Hashtable <String, RssFeedItem> rssFeedItems = new Hashtable<String, RssFeedItem>();
+        Hashtable<String, RssFeedItem> feedItems = new Hashtable<String, RssFeedItem>();
+        String dataTag = "";
+        RssFeedItem currentItem = null;
         try
         {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -36,19 +37,26 @@ public class RssDataLoaderHelper
                 if(eventType == XmlPullParser.START_TAG)
                 {
                     // Check which Tag we have
-                    if (xpp.getName().equalsIgnoreCase("title") && feedItem == null)
+                    if (xpp.getName().equalsIgnoreCase("title") && currentItem == null)
                     {
-                        activity.dataTag = xpp.nextText();
+                        String tmp = xpp.nextText();
+
+                        int seperationIndex = tmp.indexOf('-');
+
+                        if (seperationIndex != -1)
+                            dataTag = tmp.substring(seperationIndex + 2, tmp.length() - 1);
+                        else
+                            dataTag =  tmp;
                     }
 
                     // Check which Tag we have
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
-                        feedItem = new RssFeedItem();
+                        currentItem = new RssFeedItem();
                     }
 
                     // Check the parser is reading the items
-                    if(feedItem == null)
+                    if(currentItem == null)
                     {
                         eventType = xpp.next();
                         continue;
@@ -56,24 +64,26 @@ public class RssDataLoaderHelper
                     else if(xpp.getName().equalsIgnoreCase("title"))
                     {
                         String tmp = xpp.nextText();
-                        feedItem.SetTitle(tmp);
+                        currentItem.SetTitle(tmp);
                     }
                     else if (xpp.getName().equalsIgnoreCase("description"))
                     {
                         Description descTmp = new Description(xpp.nextText());
-                        feedItem.SetItemDescription(descTmp);
+                        currentItem.SetItemDescription(descTmp);
                     }
                     else if (xpp.getName().equalsIgnoreCase("point"))
                     {
                         String temp = xpp.nextText();
-                        feedItem.SetPoint(temp);
+                        currentItem.SetPoint(temp);
                     }
                 }
                 else if(eventType == XmlPullParser.END_TAG)
                 {
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
-                        rssFeedItems.put(feedItem.GetTitle(), feedItem);
+                        feedItems.put(currentItem.GetTitle(), currentItem);
+
+                        Log.e("Data stored: ", "thread store rss items is completed!!");
                     }
                 }
 
@@ -81,6 +91,8 @@ public class RssDataLoaderHelper
                 eventType = xpp.next();
 
             } // End of while
+
+            DataHolder.GetInstance().AddRssData(dataTag, feedItems);
 
         }
         catch (XmlPullParserException ae1)
@@ -91,81 +103,5 @@ public class RssDataLoaderHelper
         {
             Log.e("MyTag","IO error during parsing");
         }
-
-        Log.println(Log.INFO, "Task Completed","Insidents XML is successfully stored");
-
-        return rssFeedItems;
-    }
-
-    public static void StoreDataFromLine(String xmlSource, Hashtable<String, RssFeedItem> collection)
-    {
-        RssFeedItem feedItem = null;
-        //Hashtable <String, RssFeedItem> rssFeedItems = new Hashtable<String, RssFeedItem>();
-        try
-        {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-
-            xpp.setInput( new StringReader( xmlSource ) );
-            int eventType = xpp.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT)
-            {
-                // Found a start tag
-                if(eventType == XmlPullParser.START_TAG)
-                {
-                    // Check which Tag we have
-                    if (xpp.getName().equalsIgnoreCase("item"))
-                    {
-                        feedItem = new RssFeedItem();
-                    }
-
-                    // Check the parser is reading the items
-                    if(feedItem == null)
-                    {
-                        eventType = xpp.next();
-                        continue;
-                    }
-                    else if(xpp.getName().equalsIgnoreCase("title"))
-                    {
-                        String tmp = xpp.nextText();
-                        feedItem.SetTitle(tmp);
-                    }
-                    else if (xpp.getName().equalsIgnoreCase("description"))
-                    {
-                        Description descTmp = new Description(xpp.nextText());
-                        feedItem.SetItemDescription(descTmp);
-                    }
-                    else if (xpp.getName().equalsIgnoreCase("point"))
-                    {
-                        String temp = xpp.nextText();
-                        feedItem.SetPoint(temp);
-                    }
-                }
-                else if(eventType == XmlPullParser.END_TAG)
-                {
-                    if (xpp.getName().equalsIgnoreCase("item"))
-                    {
-                        collection.put(feedItem.GetTitle(), feedItem);
-                    }
-                }
-
-                // Get the next event
-                eventType = xpp.next();
-
-            } // End of while
-
-        }
-        catch (XmlPullParserException ae1)
-        {
-            Log.e("MyTag","Parsing error" + ae1.toString());
-        }
-        catch (IOException ae1)
-        {
-            Log.e("MyTag","IO error during parsing");
-        }
-
-        Log.println(Log.INFO, "Task Completed","Insidents XML is successfully stored");
     }
 }

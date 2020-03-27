@@ -14,10 +14,20 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
 
         mapActivity = mapActivities[0];
 
+        int startSize = DataHolder.GetInstance().GetRssData().size();
+
         try{
-            while(DataHolder.GetInstance().GetRssData().size() != 3) {
-                Log.e("Not ready", "data have not being loaded sleep for 5000 " + DataHolder.GetInstance().GetRssData().size());
-                Thread.sleep(5000);
+            while(DataHolder.GetInstance().GetRssData().size() != ApplicationVariables.MAX_RSS_CATEGORIES) {
+                Thread.sleep(3000);
+
+                if(startSize != DataHolder.GetInstance().GetRssData().size()) {
+                    mapActivities[0].runOnUiThread(new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().
+                            get(DataHolder.GetInstance().GetRssData().size() - 1)));
+
+
+                    Log.e("Add to map", "Adding data to map");
+                }
+
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -33,21 +43,29 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
     @Override
     protected void onPostExecute(Hashtable<String, RssFeedItem> stringRssFeedItemHashtable) {
         super.onPostExecute(stringRssFeedItemHashtable);
-
-        for(int i = 0; i < DataHolder.GetInstance().GetRssData().size(); i++){
-
-            Set<String> keys = DataHolder.GetInstance().GetRssData().get(i).keySet();
-
-            for(String key: keys){
-                RssFeedItem item = DataHolder.GetInstance().GetRssData().get(i).get(key);
-                mapActivity.AddMapPoint(item);
-            }
-        }
-
     }
 
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
+    }
+
+    class AddRssItemsToMapRunnable implements Runnable{
+
+        private Hashtable<String, RssFeedItem> rssItems;
+
+        public AddRssItemsToMapRunnable(Hashtable<String, RssFeedItem> rssItems) {
+            this.rssItems = rssItems;
+        }
+
+        @Override
+        public void run() {
+            Set<String> keys = rssItems.keySet();
+
+            for(String key: keys) {
+                RssFeedItem item = rssItems.get(key);
+                mapActivity.AddMapPoint(item);
+            }
+        }
     }
 }

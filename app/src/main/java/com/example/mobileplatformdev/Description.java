@@ -91,7 +91,7 @@ public class Description {
     // stores the remaining entities found between the start index and the end of the string
     private void StoreRemainingEntities(int startIndex, String xmlDescriptionData) {
 
-        if(startIndex >= xmlDescriptionData.length())
+        if (startIndex >= xmlDescriptionData.length())
             return;
 
         int elementIndex = xmlDescriptionData.length() - 1;
@@ -115,12 +115,12 @@ public class Description {
 
                 case ':':
                     if (!encounter) {
-                        value = xmlDescriptionData.substring(i + 2, elementIndex);  // elementIndex + 1
+                        value = xmlDescriptionData.substring(i + 1, elementIndex);  // elementIndex + 1
                         elementIndex = i - 1;
                         encounter = true;
                     } else if (encounter) {
-                        tag = xmlDescriptionData.substring(i + 2, elementIndex); // elementIndex + 1
-                        descriptionEntities.put(tag, value);
+                        tag = xmlDescriptionData.substring(i + 1, elementIndex); // elementIndex + 1
+                        //descriptionEntities.put(tag, value);
 
                         //change this later
                         value = new DescriptionEntity(tag, value);
@@ -130,7 +130,8 @@ public class Description {
             }
         }
 
-        Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(startIndex) + " to: " + Integer.toString(elementIndex));
+        String debugDesc = xmlDescriptionData;
+        //Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(startIndex) + " to: " + Integer.toString(elementIndex));
 
         // add the final element
         tag = xmlDescriptionData.substring(startIndex, elementIndex + 1);

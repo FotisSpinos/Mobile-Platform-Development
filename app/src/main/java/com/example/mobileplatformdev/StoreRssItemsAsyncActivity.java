@@ -46,7 +46,7 @@ public class StoreRssItemsAsyncActivity extends AsyncTask<String, Integer, Hasht
         }
 
         // store the data
-        this.rssData = RssDataLoaderHelper.GetRecordedData(stringdata, this);
+        RssDataLoaderHelper.GetRecordedData(stringdata);
 
         // store loaded data
         return rssData;
@@ -64,11 +64,6 @@ public class StoreRssItemsAsyncActivity extends AsyncTask<String, Integer, Hasht
     @Override
     protected void onPostExecute(Hashtable<String, RssFeedItem> stringRssFeedItemHashtable) {
         super.onPostExecute(stringRssFeedItemHashtable);
-
-        // add recorded data to DataHolder
-        DataHolder.GetInstance().AddRssData(dataTag, rssData);
-
-        Log.e("Data stored: ", "thread store rss items is completed!!");
     }
 
     @Override
