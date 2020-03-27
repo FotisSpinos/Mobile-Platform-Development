@@ -1,113 +1,62 @@
 package com.example.mobileplatformdev;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.LinkedList;
 
-//AppCompatActivity implements SettingFragment.FragmentSettingsListener
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
-{
-    // Traffic Scotland URLs
-    private String roadworksSource = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
-    private String plannedRoadworksSource = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
-    private String InsidentsSource = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+import java.util.*;
 
-    RssDataLoader insidentsLoader;
-    RssDataLoader plannedRoadworksLoader;
-    RssDataLoader roadworksLoader;
+public class DataHolder {
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    private ArrayList<Hashtable<String, RssFeedItem>> rssData;
+    private ArrayList<String> dataTag;
 
-        Intent intent = new Intent(MainActivity.this, MapActivity.class);
-        startActivity(intent);
+    private static DataHolder instance;
 
-        // instantiate loaders
-        insidentsLoader = new RssDataLoader(InsidentsSource);
-        plannedRoadworksLoader = new RssDataLoader(plannedRoadworksSource);
-        roadworksLoader = new RssDataLoader(roadworksSource);
+    private DataHolder() {
 
-        startProgress();
+        // instantiate rss linked list
+        rssData = new ArrayList<Hashtable<String, RssFeedItem>>();
+        dataTag = new ArrayList<String>();
     }
 
-    @Override
-    public void onClick(View aview)
-    {
-        startProgress();
+    public static DataHolder GetInstance() {
+        if(instance == null) {
+            instance = new DataHolder();
+        }
+        return instance;
     }
 
-    public void startProgress()
-    {
-        // Run network access on a separate thread;
-        new Thread(insidentsLoader).start();
-        new Thread(plannedRoadworksLoader).start();
-        new Thread(roadworksLoader).start();
+    public void StoreRssData(String url) {
+        StoreRssItemsAsyncActivity storeRssItemsAsyncActivity = new StoreRssItemsAsyncActivity();
+        storeRssItemsAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
 
-    private class RssDataLoader implements Runnable
-    {
-        private LinkedList<RssFeedItem> loadedData;
-        private String url;
+    public void AddRssData(String dataTag, Hashtable<String, RssFeedItem> item) {
+        rssData.add(item);
+        this.dataTag.add(dataTag);
+    }
 
-        public RssDataLoader(String aurl)
-        {
-            url = aurl;
-            loadedData = new LinkedList<RssFeedItem>();
-        }
+    public void AddRssDataToMap(MapActivity mapActivity) {
+        //AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity(this);
+        //addRssItemsToMapAsyncActivity.run();
+    }
 
-        @Override
-        public void run()
-        {
-            URL aurl;
-            URLConnection yc;
-            BufferedReader in = null;
-            String inputLine = "";
-            String stringdata = "";
+    public ArrayList<String> GetTags() {
+        return dataTag;
+    }
 
-            try
-            {
-                aurl = new URL(url);
-                yc = aurl.openConnection();
-                in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-
-                in.readLine();
-
-                while ((inputLine = in.readLine()) != null)
-                {
-                    stringdata = stringdata + inputLine;
-                }
-                in.close();
-            }
-            catch (IOException ae)
-            {
-                Log.e("IO Exception: ", "Unable to read data from source: " + url.toString() + " " + ae.getLocalizedMessage());
-            }
-
-            loadedData = RssFeedItemFactory.CreateRoadWorks(stringdata);
-        }
-
-        /* GETTERS */
-
-        public LinkedList<RssFeedItem> GetLoadedData()
-        {
-            return loadedData;
-        }
-
-        public String GetURL()
-        {
-            return url;
-        }
+    public ArrayList<Hashtable<String, RssFeedItem>> GetRssData() {
+        return rssData;
     }
 }
 
