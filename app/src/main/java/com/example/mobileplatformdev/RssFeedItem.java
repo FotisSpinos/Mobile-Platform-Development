@@ -50,11 +50,6 @@ public class RssFeedItem {
 
                 int counter = 2;
 
-                while(counter > 0){
-                    //tmpItem = (DescriptionEntity)tmpItem.GetValue();
-                    counter--;
-                }
-                //type = "";
                 mapDescription = tmpItem.GetValue().toString();
 
                 break;
@@ -76,7 +71,7 @@ public class RssFeedItem {
                 break;
         }
 
-        return type + " " + mapDescription;
+        return type + ": " + mapDescription;
     }
 
     /* GETTERS*/
