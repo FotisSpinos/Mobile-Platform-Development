@@ -1,16 +1,10 @@
 package com.example.mobileplatformdev;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +12,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -70,6 +62,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // add rss data to the map once they have been stored
         AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
         addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+
+        // set this activity as the map's OnMarkerClickListener
+        googleMap.setOnMarkerClickListener(this);
     }
 
     public void AddMapPoint(RssFeedItem item)
@@ -78,7 +73,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Marker marker = this.googleMap.addMarker(new MarkerOptions().position(itemLocation));
 
-        marker.setTitle(item.GetMapDescription());
+        marker.setTitle(item.DefineMapDescription());
+        String debug = item.GetMapDescription();
     }
 
     public GoogleMap GetGoogleMap()
@@ -95,11 +91,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             case R.id.rss_info_button:
                 //googleMap.clear();
-                RssWindowAdapter windowAdapter = new RssWindowAdapter(MapActivity.this);
-                googleMap.setInfoWindowAdapter(windowAdapter);
+
+                //RssWindowAdapter windowAdapter = new RssWindowAdapter(MapActivity.this);
+                //googleMap.setInfoWindowAdapter(windowAdapter);
 
                 //windowAdapter.ShowRssInfo(currentMarker, findViewById(R.id.map));
                 //windowAdapter.ShowRssInfo();
+
+
+
+                if(currentMarker == null)
+                    return;
+
+                RssFeedItem item = DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude));
                 break;
 
             case R.id.user_location_button:
@@ -111,6 +115,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
         currentMarker = marker;
-        return true;
+        return false;
     }
 }

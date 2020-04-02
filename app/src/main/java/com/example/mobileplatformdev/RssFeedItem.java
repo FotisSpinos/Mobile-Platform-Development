@@ -12,7 +12,7 @@ public class RssFeedItem {
 
     private String title;
     private Point point;
-    private String summary;
+    private String mapDescription;
 
     public Description description;
 
@@ -23,7 +23,7 @@ public class RssFeedItem {
 
     }
 
-    public String GetMapDescription() {
+    public String DefineMapDescription() {
 
         String type = "";
         String mapDescription = "";
@@ -33,7 +33,7 @@ public class RssFeedItem {
         // define the type
         for (int i = 0; i < data.size(); i++){
 
-            RssFeedItem item = data.get(i).get(title);
+            RssFeedItem item = data.get(i).get(point.ToString());
 
             if(item != null) {
                 type = DataHolder.GetInstance().GetTags().get(i);
@@ -61,7 +61,6 @@ public class RssFeedItem {
                 try {
                     mapDescription = "Ends at: ";
                     mapDescription += description.GetItem("End Date").toString();
-                    //mapDescription += description.GetItem("Delay Information").toString();
                 } catch (Exception e) {}
                 break;
 
@@ -74,18 +73,22 @@ public class RssFeedItem {
                 break;
         }
 
-        return type + ": " + mapDescription;
+        this.mapDescription = type + ": " + mapDescription;
+
+        return mapDescription;
     }
 
     /* GETTERS*/
 
-    public Point GetPoint()
-    {
+    public String GetMapDescription(){
+        return mapDescription;
+    }
+
+    public Point GetPoint() {
         return point;
     }
 
-    public String GetTitle()
-    {
+    public String GetTitle() {
         return title;
     }
 

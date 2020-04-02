@@ -81,9 +81,7 @@ public class RssDataLoaderHelper
                 {
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
-                        feedItems.put(currentItem.GetTitle(), currentItem);
-
-                        Log.e("Data stored: ", "thread store rss items is completed!!");
+                        feedItems.put(currentItem.GetPoint().ToString(), currentItem);
                     }
                 }
 
@@ -92,6 +90,7 @@ public class RssDataLoaderHelper
 
             } // End of while
 
+            Log.e("Data stored: ", "thread store rss items is completed!!");
             DataHolder.GetInstance().AddRssData(dataTag, feedItems);
 
         }

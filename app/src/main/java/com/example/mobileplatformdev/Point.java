@@ -8,7 +8,7 @@ public class Point {
 
     public Point(String pointString)
     {
-        // get the index of the space to seperate the two numbers
+        // get the index of the space to separate the two numbers
         int spaceIndex = pointString.indexOf(" ");
 
         // if the space is found
@@ -34,7 +34,20 @@ public class Point {
         this.y = y;
     }
 
-    public Point() {}
+    public Point() {
+        this.x = 0.0;
+        this.y = 0.0;
+    }
+
+    public String ToString(){
+        try {
+            String x = Double.toString(this.x);
+            String y = Double.toString(this.y);
+            return x + " " + y;
+        }catch (Exception c){
+            return "0 0";
+        }
+    }
 
 
     /* GETTERS */

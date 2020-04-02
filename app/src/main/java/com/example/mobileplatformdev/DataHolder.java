@@ -46,6 +46,19 @@ public class DataHolder {
         this.dataTag.add(dataTag);
     }
 
+    public RssFeedItem GetRssItemWithPoint(Point point){
+        RssFeedItem output = null;
+
+        for(int i = 0; i < rssData.size(); i++){
+            output = rssData.get(i).get(point.ToString());
+
+            if(output != null)
+                return output;
+        }
+
+        return null;
+    }
+
     public ArrayList<String> GetTags() {
         return dataTag;
     }

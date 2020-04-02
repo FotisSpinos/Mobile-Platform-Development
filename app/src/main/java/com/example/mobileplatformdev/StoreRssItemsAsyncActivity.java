@@ -18,7 +18,7 @@ public class StoreRssItemsAsyncActivity extends AsyncTask<String, Integer, Hasht
     @Override
     protected Hashtable<String, RssFeedItem> doInBackground(String... strings) {
 
-        Log.e("started ", "thread started");
+        Log.e("StoreRssItems", "thread started");
 
         URL aurl;
         URLConnection yc;

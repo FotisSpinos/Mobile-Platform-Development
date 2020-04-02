@@ -24,7 +24,7 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
                     mapActivities[0].runOnUiThread(new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().
                             get(DataHolder.GetInstance().GetRssData().size() - 1)));
 
-
+                    startSize = DataHolder.GetInstance().GetRssData().size();
                     Log.e("Add to map", "Adding data to map");
                 }
 

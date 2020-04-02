@@ -64,6 +64,12 @@
                 android:background="@mipmap/settings_button_icon2" />
 
         </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
