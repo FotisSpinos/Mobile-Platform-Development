@@ -12,6 +12,8 @@ public class RssFeedItem {
 
     private String title;
     private Point point;
+    private String summary;
+
     public Description description;
 
     // default constructor
@@ -42,15 +44,16 @@ public class RssFeedItem {
         switch(type){
             case "Planned Roadwork":
 
-                DescriptionEntity tmpItem = (DescriptionEntity) description.GetItem("Works");
+                //DescriptionEntity tmpItem = (DescriptionEntity) description.GetItem("Works");
 
                 if(mapDescription == null){
-                    tmpItem = (DescriptionEntity) description.GetItem("Type");
+                    //tmpItem = (DescriptionEntity) description.GetItem("Type");
                 }
 
                 int counter = 2;
 
-                mapDescription = tmpItem.GetValue().toString();
+                mapDescription = "Starts at: ";
+                mapDescription += description.GetItem("Start Date").toString();//tmpItem.GetValue().toString();
 
                 break;
 
@@ -58,7 +61,7 @@ public class RssFeedItem {
                 try {
                     mapDescription = "Ends at: ";
                     mapDescription += description.GetItem("End Date").toString();
-                    mapDescription += description.GetItem("Delay Information").toString();
+                    //mapDescription += description.GetItem("Delay Information").toString();
                 } catch (Exception e) {}
                 break;
 

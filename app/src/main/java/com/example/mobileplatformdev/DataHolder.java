@@ -46,11 +46,6 @@ public class DataHolder {
         this.dataTag.add(dataTag);
     }
 
-    public void AddRssDataToMap(MapActivity mapActivity) {
-        //AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity(this);
-        //addRssItemsToMapAsyncActivity.run();
-    }
-
     public ArrayList<String> GetTags() {
         return dataTag;
     }
