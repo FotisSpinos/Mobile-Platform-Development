@@ -2,25 +2,36 @@ package com.example.mobileplatformdev;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.LinkedList;
+
+enum RssFeedItemType {
+    INDIDENT,
+    PLANNED_ROAD_WORK,
+    ROADWORK
+}
+
 
 public class RssFeedItem {
 
     private String title;
     private Point point;
     private String summary;
-
     public Description description;
 
+    private RssFeedItemType rssType;
+
     // default constructor
-    public RssFeedItem()
+    public RssFeedItem(RssFeedItemType rssType)
     {
         title = "NULL";
-
+        this.rssType = rssType;
     }
 
     public String GetMapDescription() {
@@ -28,21 +39,10 @@ public class RssFeedItem {
         String type = "";
         String mapDescription = "";
 
-        ArrayList<Hashtable<String, RssFeedItem>> data = DataHolder.GetInstance().GetRssData();
+        type = rssType.name().toLowerCase();
 
-        // define the type
-        for (int i = 0; i < data.size(); i++){
-
-            RssFeedItem item = data.get(i).get(title);
-
-            if(item != null) {
-                type = DataHolder.GetInstance().GetTags().get(i);
-                break;
-            }
-        }
-
-        switch(type){
-            case "Planned Roadwork":
+        switch(rssType){
+            case PLANNED_ROAD_WORK:
 
                 //DescriptionEntity tmpItem = (DescriptionEntity) description.GetItem("Works");
 
@@ -53,11 +53,10 @@ public class RssFeedItem {
                 int counter = 2;
 
                 mapDescription = "Starts at: ";
-                mapDescription += description.GetItem("Start Date").toString();//tmpItem.GetValue().toString();
-
+                mapDescription += description.GetItem("Start Date").toString();
                 break;
 
-            case "Roadwork":
+            case ROADWORK:
                 try {
                     mapDescription = "Ends at: ";
                     mapDescription += description.GetItem("End Date").toString();
@@ -65,7 +64,7 @@ public class RssFeedItem {
                 } catch (Exception e) {}
                 break;
 
-            case "Current Incident":
+            case INDIDENT:
                 try{
                     mapDescription = description.GetItem("Insident").toString();
                 } catch (Exception e) {
@@ -90,6 +89,8 @@ public class RssFeedItem {
     }
 
     public Object GetDescriptionElement(String tag) { return description.GetItem(tag); }
+
+    public RssFeedItemType GetRssType() {return rssType;}
 
     /* SETTERS */
 

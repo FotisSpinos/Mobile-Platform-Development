@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 public class RssDataLoaderHelper
 {
@@ -19,7 +20,7 @@ public class RssDataLoaderHelper
     // Creates a linked list of roadworks from the xml source
     public static void GetRecordedData(String xmlSource)
     {
-        Hashtable<String, RssFeedItem> feedItems = new Hashtable<String, RssFeedItem>();
+        LinkedList<RssFeedItem> feedItems = new LinkedList<RssFeedItem>();
         String dataTag = "";
         RssFeedItem currentItem = null;
         try
@@ -52,7 +53,13 @@ public class RssDataLoaderHelper
                     // Check which Tag we have
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
-                        currentItem = new RssFeedItem();
+                        RssFeedItemType itemType = RssFeedItemType.INDIDENT;
+                        if(dataTag.equals("Roadwork"))
+                            itemType = RssFeedItemType.ROADWORK;
+                        else if(dataTag.equals("Planned Roadwork")){
+                            itemType = RssFeedItemType.PLANNED_ROAD_WORK;
+                        }
+                        currentItem = new RssFeedItem(itemType);
                     }
 
                     // Check the parser is reading the items
@@ -81,7 +88,7 @@ public class RssDataLoaderHelper
                 {
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
-                        feedItems.put(currentItem.GetTitle(), currentItem);
+                        feedItems.push(currentItem);
 
                         Log.e("Data stored: ", "thread store rss items is completed!!");
                     }
@@ -92,7 +99,7 @@ public class RssDataLoaderHelper
 
             } // End of while
 
-            DataHolder.GetInstance().AddRssData(dataTag, feedItems);
+            DataHolder.GetInstance().AddRssData(feedItems);
 
         }
         catch (XmlPullParserException ae1)

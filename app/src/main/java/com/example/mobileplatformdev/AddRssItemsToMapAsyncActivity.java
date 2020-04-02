@@ -4,25 +4,31 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Set;
-public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Integer, Hashtable<String, RssFeedItem>> {
+public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Integer, LinkedList<RssFeedItem>> {
 
     private MapActivity mapActivity;
 
     @Override
-    protected Hashtable<String, RssFeedItem> doInBackground(MapActivity... mapActivities) {
+    protected LinkedList<RssFeedItem> doInBackground(MapActivity... mapActivities) {
 
         mapActivity = mapActivities[0];
 
         int startSize = DataHolder.GetInstance().GetRssData().size();
+        int index = 0;
 
         try{
-            while(DataHolder.GetInstance().GetRssData().size() != ApplicationVariables.MAX_RSS_CATEGORIES) {
+            while(DataHolder.GetInstance().GetRssData().size() < ApplicationVariables.MAX_RSS_CATEGORIES) {  //ApplicationVariables.MAX_RSS_CATEGORIES
                 Thread.sleep(3000);
 
                 if(startSize != DataHolder.GetInstance().GetRssData().size()) {
-                    mapActivities[0].runOnUiThread(new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().
-                            get(DataHolder.GetInstance().GetRssData().size() - 1)));
+
+                    mapActivities[0].runOnUiThread(
+                            new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().get(startSize)));
+
+                    startSize = DataHolder.GetInstance().GetRssData().size();
+                    index++;
 
 
                     Log.e("Add to map", "Adding data to map");
@@ -41,7 +47,7 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
     }
 
     @Override
-    protected void onPostExecute(Hashtable<String, RssFeedItem> stringRssFeedItemHashtable) {
+    protected void onPostExecute(LinkedList<RssFeedItem> stringRssFeedItemHashtable) {
         super.onPostExecute(stringRssFeedItemHashtable);
     }
 
@@ -52,18 +58,16 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
 
     class AddRssItemsToMapRunnable implements Runnable{
 
-        private Hashtable<String, RssFeedItem> rssItems;
+        private LinkedList<RssFeedItem> rssItems;
 
-        public AddRssItemsToMapRunnable(Hashtable<String, RssFeedItem> rssItems) {
+        public AddRssItemsToMapRunnable(LinkedList<RssFeedItem> rssItems) {
             this.rssItems = rssItems;
         }
 
         @Override
         public void run() {
-            Set<String> keys = rssItems.keySet();
 
-            for(String key: keys) {
-                RssFeedItem item = rssItems.get(key);
+            for(RssFeedItem item: rssItems) {
                 mapActivity.AddMapPoint(item);
             }
         }

@@ -17,16 +17,12 @@ import java.util.*;
 
 public class DataHolder {
 
-    private ArrayList<Hashtable<String, RssFeedItem>> rssData;
-    private ArrayList<String> dataTag;
-
+    private ArrayList<LinkedList<RssFeedItem>> rssData;
     private static DataHolder instance;
 
     private DataHolder() {
-
         // instantiate rss linked list
-        rssData = new ArrayList<Hashtable<String, RssFeedItem>>();
-        dataTag = new ArrayList<String>();
+        rssData = new ArrayList<LinkedList<RssFeedItem>>();
     }
 
     public static DataHolder GetInstance() {
@@ -41,17 +37,12 @@ public class DataHolder {
         storeRssItemsAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
 
-    public void AddRssData(String dataTag, Hashtable<String, RssFeedItem> item) {
+    public void AddRssData(LinkedList<RssFeedItem> item) {
         rssData.add(item);
-        this.dataTag.add(dataTag);
     }
 
-    public ArrayList<String> GetTags() {
-        return dataTag;
-    }
-
-    public ArrayList<Hashtable<String, RssFeedItem>> GetRssData() {
-        return rssData;
+    public ArrayList<LinkedList<RssFeedItem>> GetRssData() {
+            return rssData;
     }
 }
 

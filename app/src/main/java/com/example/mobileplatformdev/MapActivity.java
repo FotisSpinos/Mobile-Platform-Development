@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Hashtable;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
     // google map instance
@@ -32,7 +34,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton settingsButton;
     private Button locationButton;
     private Button infoButton;
-
     private Marker currentMarker;
 
     @Override
@@ -95,8 +96,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             case R.id.rss_info_button:
                 //googleMap.clear();
-                RssWindowAdapter windowAdapter = new RssWindowAdapter(MapActivity.this);
-                googleMap.setInfoWindowAdapter(windowAdapter);
+                //RssWindowAdapter windowAdapter = new RssWindowAdapter(MapActivity.this);
+                //googleMap.setInfoWindowAdapter(windowAdapter);
 
                 //windowAdapter.ShowRssInfo(currentMarker, findViewById(R.id.map));
                 //windowAdapter.ShowRssInfo();

@@ -62,8 +62,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="0dp"
                 android:background="@mipmap/settings_button_icon2" />
-
         </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="145dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            tools:ignore="MissingConstraints" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
