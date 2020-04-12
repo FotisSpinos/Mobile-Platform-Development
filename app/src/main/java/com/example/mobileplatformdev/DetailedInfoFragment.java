@@ -1,0 +1,129 @@
+package com.example.mobileplatformdev;
+
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.maps.model.Marker;
+
+import java.util.Date;
+
+public class DetailedInfoFragment extends Fragment {
+
+    private RssFeedItem rssFeedItem;
+    private ViewGroup container;
+    private View view;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.rss_map_description, container, false);
+        this.container = container;
+        view = v;
+        show();
+        return v;
+    }
+
+    public void setRssFeedItem(RssFeedItem rssFeedItem) {
+        this.rssFeedItem = rssFeedItem;
+    }
+
+    public void show(Marker rssFeedItem) {
+        setRssFeedItem(DataHolder.GetInstance().GetRssItemFromMarker(rssFeedItem));
+        show();
+    }
+
+    public void show() {
+
+        // set title
+        TextView titleText = (TextView) view.findViewById(R.id.description_title);
+
+        // define title text formatting
+        titleText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+        titleText.setGravity(Gravity.CENTER_HORIZONTAL);
+        titleText.setTextSize(30);
+
+        Description desc;
+
+        // add sections according to types
+        String tag = DataHolder.GetInstance().GetTagFromRssItem(rssFeedItem);
+        switch (tag){
+            case RssFeedTypes.CURRENT_INSIDENT:
+                titleText.setText(RssFeedTypes.CURRENT_INSIDENT);
+
+                break;
+            case RssFeedTypes.PLANNED_ROADWORK:
+                titleText.setText(RssFeedTypes.PLANNED_ROADWORK);
+
+                desc = rssFeedItem.GetDescription();
+
+                addSection("Start date", desc.GetItem("Start Date").GetValue().toString());
+                addSection("End date", desc.GetItem("End Date").GetValue().toString());
+
+                if(desc.GetItem(0) != null){
+                    DescriptionEntity tmp = (DescriptionEntity)(desc.GetItem(0).GetValue());
+                    String valueTmp = tmp.GetValue().toString();
+                    String tagTmp = tmp.GetTag();
+                    addSection(valueTmp, tagTmp);
+                }
+                break;
+
+            case RssFeedTypes.ROADWORK:
+                titleText.setText("Current " + RssFeedTypes.ROADWORK);
+
+                desc = rssFeedItem.GetDescription();
+
+                addSection("Start date", desc.GetItem("Start Date").GetValue().toString());
+                addSection("End date", desc.GetItem("End Date").GetValue().toString());
+
+                if(desc.GetItem(0) != null)
+                    addSection(desc.GetItem(0).GetTag().toString(), desc.GetItem(0).GetValue().toString());
+                break;
+        }
+    }
+
+    public void addSection(String title, String contents) {
+
+        // find descriptionRootLayout
+        LinearLayout descriptionLayout = (LinearLayout) view.findViewById(R.id.description_linear_layout);
+
+        // create description layout
+        LinearLayout sectionLayout = new LinearLayout(view.getContext());
+
+        // define layout params
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(500, 200);
+
+        // adds and returns view after adding tet view to the section layout
+        sectionLayout = addTextViewToSection(title, layoutParams, sectionLayout);
+        sectionLayout = addTextViewToSection(contents, layoutParams, sectionLayout);
+
+        // add view to description layout
+        descriptionLayout.addView(sectionLayout);
+    }
+
+    public LinearLayout addTextViewToSection(String contents, ViewGroup.LayoutParams layoutParams, LinearLayout currentLayout){
+        TextView titleTextView = new TextView(container.getContext());
+        titleTextView.setText(contents);
+        titleTextView.setTextSize(30);
+
+        currentLayout.addView(titleTextView, layoutParams);
+
+        return currentLayout;
+    }
+}
+
+/*
+        Button myButton = new Button(container.getContext());
+        myButton.setText("Add Me");
+        LinearLayout ll = (LinearLayout ) view.findViewById(R.id.linearLayout);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ll.addView(myButton, lp);
+        */
+

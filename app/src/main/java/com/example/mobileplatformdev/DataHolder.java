@@ -1,24 +1,15 @@
 package com.example.mobileplatformdev;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.*;
 
 public class DataHolder {
 
     private ArrayList<Hashtable<String, RssFeedItem>> rssData;
-    private ArrayList<String> dataTag;
+    private ArrayList<String> rssTags;
 
     private static DataHolder instance;
 
@@ -26,7 +17,7 @@ public class DataHolder {
 
         // instantiate rss linked list
         rssData = new ArrayList<Hashtable<String, RssFeedItem>>();
-        dataTag = new ArrayList<String>();
+        rssTags = new ArrayList<String>();
     }
 
     public static DataHolder GetInstance() {
@@ -43,13 +34,13 @@ public class DataHolder {
 
     public void AddRssData(String dataTag, Hashtable<String, RssFeedItem> item) {
         rssData.add(item);
-        this.dataTag.add(dataTag);
+        this.rssTags.add(dataTag);
     }
 
     public RssFeedItem GetRssItemWithPoint(Point point){
         RssFeedItem output = null;
 
-        for(int i = 0; i < rssData.size(); i++){
+        for(int i = 0; i < rssData.size(); i++) {
             output = rssData.get(i).get(point.ToString());
 
             if(output != null)
@@ -59,8 +50,26 @@ public class DataHolder {
         return null;
     }
 
+    public String GetTagFromRssItem(RssFeedItem rssFeedItem) {
+
+        for (int i = 0; i < rssData.size(); i++){
+
+            RssFeedItem item = rssData.get(i).get(rssFeedItem.GetPoint().ToString());
+
+            if(item != null) {
+                return rssTags.get(i);
+            }
+        }
+        return "NOT FOUND";
+    }
+
+    public RssFeedItem GetRssItemFromMarker(Marker marker) {
+        Point point = new Point(marker.getPosition().latitude, marker.getPosition().longitude);
+        return GetRssItemWithPoint(point);
+    }
+
     public ArrayList<String> GetTags() {
-        return dataTag;
+        return rssTags;
     }
 
     public ArrayList<Hashtable<String, RssFeedItem>> GetRssData() {

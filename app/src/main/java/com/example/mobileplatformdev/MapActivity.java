@@ -24,6 +24,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton settingsButton;
     private Button locationButton;
     private Button infoButton;
+    private DetailedInfoFragment descFragment;
+
 
     private Marker currentMarker;
 
@@ -44,6 +46,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         infoButton = (Button) findViewById(R.id.rss_info_button);
         infoButton.setOnClickListener(this);
+
+        // create description fragment
+        descFragment = new DetailedInfoFragment();
     }
 
     @Override
@@ -98,22 +103,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 //windowAdapter.ShowRssInfo(currentMarker, findViewById(R.id.map));
                 //windowAdapter.ShowRssInfo();
 
+                //replaces fragment
+                if(currentMarker == null)
+                    break;
+
+                if(!descFragment.isVisible()) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.description_container, descFragment)
+                            .commit();
+                    descFragment.setRssFeedItem( DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude)));
+                }
+                else
+                    getSupportFragmentManager().beginTransaction().remove(descFragment).commit();
 
 
                 if(currentMarker == null)
                     return;
 
-                RssFeedItem item = DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude));
+                //RssFeedItem item = DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude));
                 break;
 
             case R.id.user_location_button:
-
                 break;
         }
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        // if the fragment is visible remove it
+        if(descFragment.isVisible())
+            getSupportFragmentManager().beginTransaction().remove(descFragment).commit();
+
+        // store the selected marker
         currentMarker = marker;
         return false;
     }

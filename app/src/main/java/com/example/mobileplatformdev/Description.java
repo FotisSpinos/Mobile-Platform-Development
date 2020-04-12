@@ -3,32 +3,28 @@ package com.example.mobileplatformdev;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class Description {
-    // the tags supported
-    private String[] supportedTags;
-
-    // TEMP REMOVE LATER
-    public String xmlDescriptionData;
-
-    private HashMap<String, Object> descriptionEntities;
+    //private HashMap<String, Object> descriptionEntities;
+    private LinkedList<DescriptionEntity> descriptionEntities;
 
     // constructs an object using the description string
     public Description(String xmlDescriptionData) {
-        descriptionEntities = new HashMap<String, Object>();
+        descriptionEntities = new LinkedList<DescriptionEntity>();
 
         int lastDateIndex = StoreDates(xmlDescriptionData);
 
-        // if no dates are found we can assume that the string represents an insident
+        // if no dates are found we can assume that the string represents an incident
         if(lastDateIndex == 0 &&
         descriptionEntities.isEmpty())
         {
-            descriptionEntities.put("Insident", xmlDescriptionData);
+            descriptionEntities.push(new DescriptionEntity("Insident", xmlDescriptionData));
             return;
         }
-        StoreRemainingEntities(lastDateIndex, xmlDescriptionData);
 
-        this.xmlDescriptionData = xmlDescriptionData;
+        StoreRemainingEntities(lastDateIndex, xmlDescriptionData);
     }
 
     // Stores description dates and returns the last index of the string read by the function
@@ -52,7 +48,7 @@ public class Description {
                         value = ParseUtils.ParseToRSSDate(stringValue);
 
                         // add rss element
-                        descriptionEntities.put(tag, value);
+                        descriptionEntities.push(new DescriptionEntity(tag, value));
                         elementIndex = i + 6;
 
                         dateCounter++;
@@ -70,7 +66,7 @@ public class Description {
 
                         value = ParseUtils.ParseToRSSDate(stringValue);
                         // add rss element
-                        descriptionEntities.put(tag, value);
+                        descriptionEntities.push(new DescriptionEntity(tag, value));
                         elementIndex = i + 6;
 
                         dateCounter++;
@@ -107,19 +103,20 @@ public class Description {
                         continue;
                     encounter = false;
 
-                    tag = xmlDescriptionData.substring(i, elementIndex);
-                    descriptionEntities.put(tag, value);
+                    tag = xmlDescriptionData.substring(i + 1, elementIndex + 1);
+                    descriptionEntities.push(new DescriptionEntity(tag, value));
 
                     elementIndex = i - 1;
+                    //elementIndex = i;
                     break;
 
                 case ':':
                     if (!encounter) {
-                        value = xmlDescriptionData.substring(i + 1, elementIndex);  // elementIndex + 1
+                        value = xmlDescriptionData.substring(i + 1, elementIndex + 1);  // elementIndex + 1
                         elementIndex = i - 1;
                         encounter = true;
                     } else if (encounter) {
-                        tag = xmlDescriptionData.substring(i + 1, elementIndex); // elementIndex + 1
+                        tag = xmlDescriptionData.substring(i + 1, elementIndex + 1); // elementIndex + 1
                         //descriptionEntities.put(tag, value);
 
                         //change this later
@@ -136,11 +133,21 @@ public class Description {
         // add the final element
         tag = xmlDescriptionData.substring(startIndex, elementIndex + 1);
 
-        descriptionEntities.put(tag, value);
+
+        descriptionEntities.push(new DescriptionEntity(tag, value));
     }
 
-    public Object GetItem(String tag)
-    {
-        return descriptionEntities.get(tag);
+    public DescriptionEntity GetItem(String tag) {
+
+        for(int i = 0; i < descriptionEntities.size(); i++) {
+            if(descriptionEntities.get(i).GetTag().equals(tag))
+                return descriptionEntities.get(i);
+        }
+        return null;
+    }
+
+    public DescriptionEntity GetItem(int index) {
+
+        return descriptionEntities.get(index);
     }
 }

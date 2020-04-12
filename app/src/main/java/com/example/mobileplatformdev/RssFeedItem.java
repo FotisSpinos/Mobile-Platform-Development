@@ -13,8 +13,7 @@ public class RssFeedItem {
     private String title;
     private Point point;
     private String mapDescription;
-
-    public Description description;
+    private Description description;
 
     // default constructor
     public RssFeedItem()
@@ -53,20 +52,20 @@ public class RssFeedItem {
                 int counter = 2;
 
                 mapDescription = "Starts at: ";
-                mapDescription += description.GetItem("Start Date").toString();//tmpItem.GetValue().toString();
+                mapDescription += description.GetItem("Start Date").GetValue().toString();
 
                 break;
 
             case "Roadwork":
                 try {
                     mapDescription = "Ends at: ";
-                    mapDescription += description.GetItem("End Date").toString();
+                    mapDescription += description.GetItem("End Date").GetValue().toString();
                 } catch (Exception e) {}
                 break;
 
             case "Current Incident":
                 try{
-                    mapDescription = description.GetItem("Insident").toString();
+                    mapDescription = description.GetItem("Insident").GetValue().toString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -91,6 +90,8 @@ public class RssFeedItem {
     public String GetTitle() {
         return title;
     }
+
+    public Description GetDescription(){return description; }
 
     public Object GetDescriptionElement(String tag) { return description.GetItem(tag); }
 
