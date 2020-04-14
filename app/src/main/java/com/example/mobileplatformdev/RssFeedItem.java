@@ -7,10 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 public class RssFeedItem {
 
-    private String title;
+    private RssItemLocation rssItemLocation;
     private Point point;
     private String mapDescription;
     private Description description;
@@ -18,7 +19,6 @@ public class RssFeedItem {
     // default constructor
     public RssFeedItem()
     {
-        title = "NULL";
     }
 
     public String DefineMapDescription() {
@@ -86,11 +86,9 @@ public class RssFeedItem {
         return point;
     }
 
-    public String GetTitle() {
-        return title;
-    }
-
     public Description GetDescription(){return description; }
+
+    public RssItemLocation GetJunctionNum(){return rssItemLocation;}
 
     public Object GetDescriptionElement(String tag) { return description.GetItem(tag); }
 
@@ -101,10 +99,7 @@ public class RssFeedItem {
         this.point = new Point(point);
     }
 
-    public void SetTitle(String title)
-    {
-        this.title = title;
-    }
+    public void SetRssItemLocation(RssItemLocation rssItemLocation){ this.rssItemLocation = rssItemLocation;}
 
     public void SetItemDescription(Description description) { this.description = description; }
 }

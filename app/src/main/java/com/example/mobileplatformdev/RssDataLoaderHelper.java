@@ -64,7 +64,7 @@ public class RssDataLoaderHelper
                     else if(xpp.getName().equalsIgnoreCase("title"))
                     {
                         String tmp = xpp.nextText();
-                        currentItem.SetTitle(tmp);
+                        currentItem.SetRssItemLocation(new RssItemLocation(tmp));
                     }
                     else if (xpp.getName().equalsIgnoreCase("description"))
                     {
