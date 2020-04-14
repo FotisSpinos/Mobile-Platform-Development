@@ -18,7 +18,7 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
 
         try{
             while(DataHolder.GetInstance().GetRssData().size() != ApplicationVariables.MAX_RSS_CATEGORIES) {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
 
                 if(startSize != DataHolder.GetInstance().GetRssData().size()) {
                     mapActivities[0].runOnUiThread(new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().

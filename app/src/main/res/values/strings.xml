@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MobilePlatformDev</string>
-    <string name="title_activity_maps"> Trafic Information </string>
+    <string name="title_activity_maps"> Traffic Information </string>
+    <string name="search">Search Traffic Data</string>
 </resources>

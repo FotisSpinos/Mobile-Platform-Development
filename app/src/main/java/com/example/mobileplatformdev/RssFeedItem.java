@@ -19,7 +19,6 @@ public class RssFeedItem {
     public RssFeedItem()
     {
         title = "NULL";
-
     }
 
     public String DefineMapDescription() {

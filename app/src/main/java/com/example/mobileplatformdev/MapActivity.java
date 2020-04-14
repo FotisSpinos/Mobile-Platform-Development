@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import androidx.appcompat.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,6 +22,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // google map instance
     private GoogleMap googleMap;
+
+    // search view instance
+    private SearchView searchView;
 
     private ImageButton settingsButton;
     private Button locationButton;
@@ -47,8 +52,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         infoButton = (Button) findViewById(R.id.rss_info_button);
         infoButton.setOnClickListener(this);
 
+        searchView = (SearchView) findViewById(R.id.search_view);
+
         // create description fragment
         descFragment = new DetailedInfoFragment();
+
+    }
+
+    public void RefreshMapData() {
+        googleMap.clear();
+
+        String urls[] = {RssUrl.INSIDENTS_URL, RssUrl.ROADWORKS_URL, RssUrl.PLANNED_ROADWORKS_URL};
+
+        DataHolder.GetInstance().RefreshData(urls);
+
+        // add rss data to the map once they have been stored
+        AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
+        addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }
 
     @Override
@@ -57,19 +77,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Move camera to Glasgow
         LatLng glasgow = new LatLng(55.861, -4.25);
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(glasgow));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(glasgow, 5));
 
-        // load rss data
-        DataHolder.GetInstance().StoreRssData(RssUrl.INSIDENTS_URL);
-        DataHolder.GetInstance().StoreRssData(RssUrl.ROADWORKS_URL);
-        DataHolder.GetInstance().StoreRssData(RssUrl.PLANNED_ROADWORKS_URL);
-
-        // add rss data to the map once they have been stored
-        AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
-        addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+        // refresh data
+        RefreshMapData();
 
         // set this activity as the map's OnMarkerClickListener
         googleMap.setOnMarkerClickListener(this);
+
+        searchView.setOnQueryTextListener(new GoogleMapTextListener(this, googleMap, searchView));
     }
 
     public void AddMapPoint(RssFeedItem item)
@@ -79,7 +95,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Marker marker = this.googleMap.addMarker(new MarkerOptions().position(itemLocation));
 
         marker.setTitle(item.DefineMapDescription());
-        String debug = item.GetMapDescription();
+
+        String tag = DataHolder.GetInstance().GetTagFromRssItem(item);
+
+        float markerColor = BitmapDescriptorFactory.HUE_VIOLET;
+
+        if(tag.equals(RssFeedTypes.CURRENT_INSIDENT))
+            markerColor = BitmapDescriptorFactory.HUE_RED;
+        else if(tag.equals(RssFeedTypes.PLANNED_ROADWORK))
+            markerColor = BitmapDescriptorFactory.HUE_GREEN;
+        else if(tag.equals(RssFeedTypes.ROADWORK))
+            markerColor = BitmapDescriptorFactory.HUE_YELLOW;
+
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
     }
 
     public GoogleMap GetGoogleMap()
@@ -92,6 +120,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         switch(v.getId()){
             case R.id.settings_button:
+                RefreshMapData();
                 break;
 
             case R.id.rss_info_button:

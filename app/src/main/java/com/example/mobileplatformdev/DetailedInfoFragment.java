@@ -1,5 +1,6 @@
 package com.example.mobileplatformdev;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,6 +59,12 @@ public class DetailedInfoFragment extends Fragment {
             case RssFeedTypes.CURRENT_INSIDENT:
                 titleText.setText(RssFeedTypes.CURRENT_INSIDENT);
 
+                desc = rssFeedItem.GetDescription();
+                if(desc.GetItem(0) != null) {
+
+                    addSection("Description", desc.GetItem(0).GetValue().toString());
+                }
+
                 break;
             case RssFeedTypes.PLANNED_ROADWORK:
                 titleText.setText(RssFeedTypes.PLANNED_ROADWORK);
@@ -96,9 +103,18 @@ public class DetailedInfoFragment extends Fragment {
 
         // create description layout
         LinearLayout sectionLayout = new LinearLayout(view.getContext());
+        //sectionLayout.setRight(500);
+
+        sectionLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                500, 200);
+
+        layoutParams.setMargins(30, 20, 30, 0);
+
 
         // define layout params
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(500, 200);
+        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(500, 200);
 
         // adds and returns view after adding tet view to the section layout
         sectionLayout = addTextViewToSection(title, layoutParams, sectionLayout);
@@ -111,7 +127,8 @@ public class DetailedInfoFragment extends Fragment {
     public LinearLayout addTextViewToSection(String contents, ViewGroup.LayoutParams layoutParams, LinearLayout currentLayout){
         TextView titleTextView = new TextView(container.getContext());
         titleTextView.setText(contents);
-        titleTextView.setTextSize(30);
+        titleTextView.setTextSize(20);
+        titleTextView.setTextColor(Color.WHITE);
 
         currentLayout.addView(titleTextView, layoutParams);
 

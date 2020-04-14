@@ -26,8 +26,8 @@
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="671dp"
             android:background="@drawable/location_icon" />
 
         <Button
@@ -36,8 +36,8 @@
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="149dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginTop="142dp"
+            android:layout_marginEnd="671dp"
             android:background="@drawable/info_icon" />
 
         <RelativeLayout
