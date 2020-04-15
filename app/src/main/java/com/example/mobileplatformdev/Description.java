@@ -10,6 +10,10 @@ public class Description {
     //private HashMap<String, Object> descriptionEntities;
     private LinkedList<DescriptionEntity> descriptionEntities;
 
+    public Description(){
+        descriptionEntities = new LinkedList<DescriptionEntity>();
+    }
+
     // constructs an object using the description string
     public Description(String xmlDescriptionData) {
         descriptionEntities = new LinkedList<DescriptionEntity>();
@@ -25,6 +29,11 @@ public class Description {
         }
 
         StoreRemainingEntities(lastDateIndex, xmlDescriptionData);
+    }
+
+    // add a description entity
+    public void AddDescriptionEntity(DescriptionEntity entity){
+        descriptionEntities.add(entity);
     }
 
     // Stores description dates and returns the last index of the string read by the function

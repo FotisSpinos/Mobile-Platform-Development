@@ -55,6 +55,8 @@ public class DetailedInfoFragment extends Fragment {
 
         // add sections according to types
         String tag = DataHolder.GetInstance().GetTagFromRssItem(rssFeedItem);
+
+        
         switch (tag){
             case RssFeedTypes.CURRENT_INSIDENT:
                 titleText.setText(RssFeedTypes.CURRENT_INSIDENT);

@@ -28,10 +28,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private SearchView searchView;
 
     private ImageButton settingsButton;
-    private Button locationButton;
     private Button infoButton;
     private DetailedInfoFragment descFragment;
-
 
     private Marker currentMarker;
 
@@ -46,9 +44,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         settingsButton = (ImageButton) findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this);
-
-        locationButton = (Button) findViewById(R.id.user_location_button);
-        locationButton.setOnClickListener(this);
 
         infoButton = (Button) findViewById(R.id.rss_info_button);
         infoButton.setOnClickListener(this);
@@ -122,7 +117,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         switch(v.getId()){
             case R.id.settings_button:
-                //RefreshMapData();
+                DataHolder.GetInstance().StopActivities();
 
                 Intent myIntent = new Intent(this, SearchActivity.class);
                 this.startActivity(myIntent);

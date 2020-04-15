@@ -19,6 +19,9 @@ public class RssFeedItem {
     // default constructor
     public RssFeedItem()
     {
+        description = new Description();
+        rssItemLocation = new RssItemLocation("NULL", new LinkedList<String>());
+        point = new Point(0,0);
     }
 
     public String DefineMapDescription() {
@@ -88,7 +91,7 @@ public class RssFeedItem {
 
     public Description GetDescription(){return description; }
 
-    public RssItemLocation GetJunctionNum(){return rssItemLocation;}
+    public RssItemLocation GetRssItemLocation(){return rssItemLocation;}
 
     public Object GetDescriptionElement(String tag) { return description.GetItem(tag); }
 

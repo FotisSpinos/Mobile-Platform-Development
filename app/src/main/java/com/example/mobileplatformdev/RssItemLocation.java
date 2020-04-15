@@ -9,6 +9,17 @@ public class RssItemLocation {
     private String road;
     private LinkedList<String> junctions;
 
+    public RssItemLocation(String road, String junction){
+        this.road = road;
+        this.junctions = new LinkedList<String>();
+        junctions.push(junction);
+    }
+
+    public RssItemLocation(String road, LinkedList<String> junctions){
+        this.road = road;
+        this.junctions = junctions;
+    }
+
     public RssItemLocation(String xmlData) {
 
         // Initialize junctionNumbers
@@ -119,7 +130,11 @@ public class RssItemLocation {
         return false;
     }
 
+    // ** GETTERS **
+
     public String GetRoad(){
         return road;
     }
+
+    public LinkedList<String> GetJunctions(){return junctions;}
 }

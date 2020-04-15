@@ -11,12 +11,19 @@ public class DataHolder {
     private ArrayList<Hashtable<String, RssFeedItem>> rssData;
     private ArrayList<String> rssTags;
 
+    private Stack<StoreRssItemsAsyncActivity> storeActivities;
+    private Stack<AddRssItemsToMapAsyncActivity> addToMapActivities;
+
     private static DataHolder instance;
 
     private DataHolder() {
         // instantiate rss linked list
         rssData = new ArrayList<Hashtable<String, RssFeedItem>>();
         rssTags = new ArrayList<String>();
+
+        // init stack activities
+        storeActivities = new Stack<StoreRssItemsAsyncActivity>();
+        addToMapActivities = new Stack<AddRssItemsToMapAsyncActivity>();
     }
 
     public static DataHolder GetInstance() {
@@ -29,6 +36,15 @@ public class DataHolder {
     public void StoreRssData(String url) {
         StoreRssItemsAsyncActivity storeRssItemsAsyncActivity = new StoreRssItemsAsyncActivity();
         storeRssItemsAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+
+        storeActivities.push(storeRssItemsAsyncActivity);
+    }
+
+    public void AddRssDataToFile(MapActivity mapActivity) {
+        AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
+        addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mapActivity);
+
+        addToMapActivities.push(addRssItemsToMapAsyncActivity);
     }
 
     public void AddRssData(String dataTag, Hashtable<String, RssFeedItem> item) {
@@ -67,8 +83,20 @@ public class DataHolder {
         return GetRssItemWithPoint(point);
     }
 
+    public void StopActivities(){
+        while(!addToMapActivities.empty()){
+            addToMapActivities.pop().cancel(true);
+        }
+
+        while(!storeActivities.empty()){
+            storeActivities.pop().cancel(true);
+        }
+    }
+
     public void RefreshData(String[] urls)
     {
+        StopActivities();
+
         rssData.clear();
         rssTags.clear();
 
