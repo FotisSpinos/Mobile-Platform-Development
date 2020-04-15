@@ -1,5 +1,6 @@
 package com.example.mobileplatformdev;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -62,6 +63,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void RefreshMapData() {
         googleMap.clear();
 
+        // refresh data
         String urls[] = {RssUrl.INSIDENTS_URL, RssUrl.ROADWORKS_URL, RssUrl.PLANNED_ROADWORKS_URL};
 
         DataHolder.GetInstance().RefreshData(urls);
@@ -120,7 +122,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         switch(v.getId()){
             case R.id.settings_button:
-                RefreshMapData();
+                //RefreshMapData();
+
+                Intent myIntent = new Intent(this, SearchActivity.class);
+                this.startActivity(myIntent);
                 break;
 
             case R.id.rss_info_button:
