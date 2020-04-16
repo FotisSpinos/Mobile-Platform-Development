@@ -30,6 +30,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton settingsButton;
     private Button infoButton;
     private DetailedInfoFragment descFragment;
+    private Button refreashButton;
 
     private Marker currentMarker;
 
@@ -49,6 +50,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         infoButton.setOnClickListener(this);
 
         searchView = (SearchView) findViewById(R.id.search_view);
+
+        refreashButton = (Button) findViewById(R.id.refresh_button);
+        refreashButton.setOnClickListener(this);
 
         // create description fragment
         descFragment = new DetailedInfoFragment();
@@ -77,7 +81,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(glasgow, 5));
 
         // refresh data
-        RefreshMapData();
+        if(DataHolder.GetInstance().GetTags().size() == 0)
+            RefreshMapData();
+        else {
+            AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
+            addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+        }
 
         // set this activity as the map's OnMarkerClickListener
         googleMap.setOnMarkerClickListener(this);
@@ -123,6 +132,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 this.startActivity(myIntent);
                 break;
 
+            case R.id.refresh_button:
+                    RefreshMapData();
+                break;
+
             case R.id.rss_info_button:
                 //googleMap.clear();
 
@@ -149,9 +162,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     return;
 
                 //RssFeedItem item = DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude));
-                break;
-
-            case R.id.user_location_button:
                 break;
         }
     }

@@ -1,5 +1,7 @@
 package com.example.mobileplatformdev;
 
+import com.google.android.gms.common.internal.Objects;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -60,5 +62,9 @@ public class RssFeedItemSelector {
         }
 
         return true;
+    }
+
+    public String GetDesiredType() {
+        return desiredType;
     }
 }

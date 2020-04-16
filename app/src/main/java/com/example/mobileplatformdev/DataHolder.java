@@ -1,7 +1,9 @@
 package com.example.mobileplatformdev;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.*;
@@ -91,6 +93,13 @@ public class DataHolder {
         while(!storeActivities.empty()){
             storeActivities.pop().cancel(true);
         }
+    }
+
+    public void ResetData(MapActivity map){
+        StopActivities();
+
+        AddRssItemsToMapAsyncActivity addRssItemsToMapAsyncActivity = new AddRssItemsToMapAsyncActivity();
+        addRssItemsToMapAsyncActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, map);
     }
 
     public void RefreshData(String[] urls)

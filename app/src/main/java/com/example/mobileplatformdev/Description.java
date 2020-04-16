@@ -136,7 +136,7 @@ public class Description {
             }
         }
 
-        String debugDesc = xmlDescriptionData;
+        //String debugDesc = xmlDescriptionData;
         //Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(startIndex) + " to: " + Integer.toString(elementIndex));
 
         // add the final element

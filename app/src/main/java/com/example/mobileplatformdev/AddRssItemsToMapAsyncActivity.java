@@ -10,10 +10,10 @@ import java.util.Stack;
 public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Integer, Hashtable<String, RssFeedItem>> {
 
     private MapActivity mapActivity;
-    private Stack<AddRssItemsToMapRunnable> addDataToMapThreads;
+    //private Stack<AddRssItemsToMapRunnable> addDataToMapThreads;
 
     public AddRssItemsToMapAsyncActivity(){
-        addDataToMapThreads = new Stack<AddRssItemsToMapRunnable>();
+        //addDataToMapThreads = new Stack<AddRssItemsToMapRunnable>();
     }
 
     @Override
@@ -23,16 +23,31 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
 
         int startSize = DataHolder.GetInstance().GetRssData().size();
 
+        if(startSize == ApplicationVariables.MAX_RSS_CATEGORIES){
+            for(int i = 0; i < startSize; i++) {
+                if(RssFeedItemSelector.GetInsrance().GetDesiredType() == null){
+                    Add(DataHolder.GetInstance().GetRssData().get(i));
+                }
+                else if(RssFeedItemSelector.GetInsrance().GetDesiredType() != null &&
+                        RssFeedItemSelector.GetInsrance().GetDesiredType().equals(DataHolder.GetInstance().GetTags().get(i))){
+                    Add(DataHolder.GetInstance().GetRssData().get(i));
+                }
+
+            }
+        }
+
         try{
             while(DataHolder.GetInstance().GetRssData().size() != ApplicationVariables.MAX_RSS_CATEGORIES) {
                 Thread.sleep(1000);
 
                 if(startSize != DataHolder.GetInstance().GetRssData().size()) {
-                    AddRssItemsToMapRunnable addRssItemsToMapRunnable = new AddRssItemsToMapRunnable(DataHolder.GetInstance().GetRssData().
+
+                    AddRssItemsToMapRunnable addRssItemsToMapRunnable = new AddRssItemsToMapRunnable(
+                            DataHolder.GetInstance().GetRssData().
                             get(DataHolder.GetInstance().GetRssData().size() - 1));
 
                     mapActivities[0].runOnUiThread(addRssItemsToMapRunnable);
-                    addDataToMapThreads.push(addRssItemsToMapRunnable);
+                    //addDataToMapThreads.push(addRssItemsToMapRunnable);
 
                     startSize = DataHolder.GetInstance().GetRssData().size();
                     Log.e("Add to map", "Adding data to map");
@@ -43,6 +58,12 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected void Add(Hashtable<String, RssFeedItem> rssItems){
+        AddRssItemsToMapRunnable addRssItemsToMapRunnable = new AddRssItemsToMapRunnable(rssItems);
+        mapActivity.runOnUiThread(addRssItemsToMapRunnable);
+        //addDataToMapThreads.push(addRssItemsToMapRunnable);
     }
 
     @Override

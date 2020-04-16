@@ -56,7 +56,9 @@ public class DetailedInfoFragment extends Fragment {
         // add sections according to types
         String tag = DataHolder.GetInstance().GetTagFromRssItem(rssFeedItem);
 
-        
+        // add road to the description
+        addSection("Road", rssFeedItem.GetRssItemLocation().GetRoad());
+
         switch (tag){
             case RssFeedTypes.CURRENT_INSIDENT:
                 titleText.setText(RssFeedTypes.CURRENT_INSIDENT);
@@ -78,9 +80,8 @@ public class DetailedInfoFragment extends Fragment {
 
                 if(desc.GetItem(0) != null){
                     DescriptionEntity tmp = (DescriptionEntity)(desc.GetItem(0).GetValue());
-                    String valueTmp = tmp.GetValue().toString();
-                    String tagTmp = tmp.GetTag();
-                    addSection(valueTmp, tagTmp);
+                    addSection("Status", tmp.GetValue().toString());
+                    addSection("Details", tmp.GetTag());
                 }
                 break;
 

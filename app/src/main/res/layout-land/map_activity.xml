@@ -21,24 +21,24 @@
             tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
 
         <Button
-            android:id="@+id/user_location_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="75dp"
-            android:layout_marginEnd="671dp"
-            android:background="@drawable/location_icon" />
-
-        <Button
             android:id="@+id/rss_info_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="142dp"
-            android:layout_marginEnd="671dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="71dp"
             android:background="@drawable/info_icon" />
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/rss_info_button"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="19dp"
+            android:background="@drawable/refresh_icon" />
 
         <RelativeLayout
             android:layout_width="match_parent"
