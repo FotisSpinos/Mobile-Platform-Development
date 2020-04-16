@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,7 +28,10 @@ import java.util.*;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private Spinner typeSpinner;
+    private CheckBox incidentCheckBox;
+    private CheckBox plannedRoadworksCheckBox;
+    private CheckBox roadworksCheckBox;
+
     private Spinner daySpinner;
     private Spinner monthSpinner;
     private Spinner yearSpinner;
@@ -41,7 +45,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
 
-        typeSpinner = (Spinner) findViewById(R.id.type_spinner);
+        incidentCheckBox = (CheckBox) findViewById(R.id.incidents_checkBox);
+        plannedRoadworksCheckBox = (CheckBox) findViewById(R.id.planned_roadworks_checkbox);
+        roadworksCheckBox = (CheckBox) findViewById(R.id.current_road_works_checkbox);
+
         daySpinner = (Spinner) findViewById(R.id.day_spinner);
         monthSpinner = (Spinner) findViewById(R.id.month_spinner);
         yearSpinner = (Spinner) findViewById(R.id.year_spinner);
@@ -60,8 +67,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(arrayAdapter);
-        typeSpinner.setOnItemSelectedListener(this);
+        //typeSpinner.setAdapter(arrayAdapter);
+        //typeSpinner.setOnItemSelectedListener(this);
 
         // add elements to day spinner
         ArrayAdapter<Integer> dayAdapter = new DaySpinnerContainer(1, this).GetSpinnerData();
@@ -76,7 +83,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         monthSpinner.setOnItemSelectedListener(this);
 
         // add elements to year spinner
-        ArrayAdapter<Integer> yearAdapter = new YearSpinnerDataContainer(5, this).GetSpinnerData();
+        ArrayAdapter<Integer> yearAdapter = new YearSpinnerDataContainer(2, this).GetSpinnerData();
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
         yearSpinner.setOnItemSelectedListener(this);
@@ -91,10 +98,17 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             RssItemLocation itemLocation = new RssItemLocation(roadEditText.getText().toString(), junctionEditText.getText().toString());
             desiredItem.SetRssItemLocation(itemLocation);
 
-            String desiredType = typeSpinner.getSelectedItem().toString();
+            ArrayList<String> desiredTypes = new ArrayList<String>(3);
 
-            RssFeedItemSelector.GetInsrance().SetDesiredRssItem(desiredItem);
-            RssFeedItemSelector.GetInsrance().SetDesiredType(desiredType);
+            if(roadworksCheckBox.isChecked())
+                desiredTypes.add(0, RssFeedTypes.ROADWORK);
+            if(plannedRoadworksCheckBox.isChecked())
+                desiredTypes.add(1, RssFeedTypes.PLANNED_ROADWORK);
+            if(incidentCheckBox.isChecked())
+                desiredTypes.add(2, RssFeedTypes.CURRENT_INSIDENT);
+
+
+            RssFeedItemSelector.GetInsrance().SetDesiredType(desiredTypes);
 
             Date desiredDate = new Date();
 
@@ -110,6 +124,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             desiredDescription.AddDescriptionEntity(new DescriptionEntity("Start Date", desiredDate));
             desiredItem.SetItemDescription(desiredDescription);
 
+            RssFeedItemSelector.GetInsrance().SetDesiredRssItem(desiredItem);
 
             // load new map activity
             Intent myIntent = new Intent(this, MapActivity.class);

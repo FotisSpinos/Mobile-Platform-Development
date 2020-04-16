@@ -1,15 +1,13 @@
 package com.example.mobileplatformdev;
 
-import com.google.android.gms.common.internal.Objects;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class RssFeedItemSelector {
 
     private RssFeedItem desiredRssItem;
-    private String desiredType;
+    private ArrayList<String> desiredTypes;
 
     public static RssFeedItemSelector instance;
 
@@ -26,14 +24,26 @@ public class RssFeedItemSelector {
             this.desiredRssItem = rssFeedItem;
     }
 
-    public void SetDesiredType(String desiredType){
-        this.desiredType = desiredType;
+    public void SetDesiredType(ArrayList<String> desiredType){
+        this.desiredTypes = desiredType;
+    }
+
+    public boolean IsMatchingItemType(String type){
+        boolean matchingType = false;
+        for(int i = 0; i < desiredTypes.size(); i++){
+            if(desiredTypes.get(i).equals(type)){
+                matchingType = true;
+            }
+        }
+
+        return matchingType;
     }
 
     public boolean isItemDesired(RssFeedItem checkItem){
 
-        if(desiredRssItem == null || desiredType == "")
+        if(desiredRssItem == null)  //|| desiredType == ""
             return true;
+
 
         //compare the dates
         if(checkItem.GetDescription().GetItem("Start Date") != null) {
@@ -43,9 +53,6 @@ public class RssFeedItemSelector {
                 return false;
         }
 
-
-        if(!DataHolder.GetInstance().GetTagFromRssItem(checkItem).equals(desiredType))
-            return false;
 
         if(!checkItem.GetRssItemLocation().GetRoad().equals(desiredRssItem.GetRssItemLocation().GetRoad()))
                 if(!desiredRssItem.GetRssItemLocation().GetRoad().equals(""))
@@ -64,7 +71,7 @@ public class RssFeedItemSelector {
         return true;
     }
 
-    public String GetDesiredType() {
-        return desiredType;
+    public ArrayList<String> GetDesiredType() {
+        return desiredTypes;
     }
 }

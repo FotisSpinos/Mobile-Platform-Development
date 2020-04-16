@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.util.Hashtable;
 import java.util.Set;
-import java.util.Stack;
 
 public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Integer, Hashtable<String, RssFeedItem>> {
 
@@ -26,11 +25,11 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
         if(startSize == ApplicationVariables.MAX_RSS_CATEGORIES){
             for(int i = 0; i < startSize; i++) {
                 if(RssFeedItemSelector.GetInsrance().GetDesiredType() == null){
-                    Add(DataHolder.GetInstance().GetRssData().get(i));
+                    AddItemCollectionToMap(DataHolder.GetInstance().GetRssData().get(i));
                 }
                 else if(RssFeedItemSelector.GetInsrance().GetDesiredType() != null &&
-                        RssFeedItemSelector.GetInsrance().GetDesiredType().equals(DataHolder.GetInstance().GetTags().get(i))){
-                    Add(DataHolder.GetInstance().GetRssData().get(i));
+                        RssFeedItemSelector.GetInsrance().IsMatchingItemType(DataHolder.GetInstance().GetTags().get(i))){
+                    AddItemCollectionToMap(DataHolder.GetInstance().GetRssData().get(i));
                 }
 
             }
@@ -60,7 +59,7 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
         return null;
     }
 
-    protected void Add(Hashtable<String, RssFeedItem> rssItems){
+    protected void AddItemCollectionToMap(Hashtable<String, RssFeedItem> rssItems){
         AddRssItemsToMapRunnable addRssItemsToMapRunnable = new AddRssItemsToMapRunnable(rssItems);
         mapActivity.runOnUiThread(addRssItemsToMapRunnable);
         //addDataToMapThreads.push(addRssItemsToMapRunnable);
@@ -102,6 +101,7 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
 
         @Override
         public void run() {
+            Log.e("Add to map", "Adding data to map thread started");
             Set<String> keys = rssItems.keySet();
 
             for(String key: keys) {
