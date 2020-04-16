@@ -2,8 +2,10 @@ package com.example.mobileplatformdev;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.*;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnItemSelectedListener {
 
     private CheckBox incidentCheckBox;
     private CheckBox plannedRoadworksCheckBox;
@@ -58,6 +60,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         // set on click listener for apply button
         applyButton.setOnClickListener(this);
+
+        monthSpinner.setOnItemSelectedListener(this);
 
         // add elements to type spinner
         ArrayList<String> arrayList = new ArrayList<>(3);
@@ -93,19 +97,19 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
 
-        if(v.getId() == R.id.apply_button){
+        if(v.getId() == R.id.apply_button) {
             RssFeedItem desiredItem = new RssFeedItem();
             RssItemLocation itemLocation = new RssItemLocation(roadEditText.getText().toString(), junctionEditText.getText().toString());
             desiredItem.SetRssItemLocation(itemLocation);
 
-            ArrayList<String> desiredTypes = new ArrayList<String>(3);
+            ArrayList<String> desiredTypes = new ArrayList<String>();
 
             if(roadworksCheckBox.isChecked())
-                desiredTypes.add(0, RssFeedTypes.ROADWORK);
+                desiredTypes.add(RssFeedTypes.ROADWORK);
             if(plannedRoadworksCheckBox.isChecked())
-                desiredTypes.add(1, RssFeedTypes.PLANNED_ROADWORK);
+                desiredTypes.add(RssFeedTypes.PLANNED_ROADWORK);
             if(incidentCheckBox.isChecked())
-                desiredTypes.add(2, RssFeedTypes.CURRENT_INSIDENT);
+                desiredTypes.add(RssFeedTypes.CURRENT_INSIDENT);
 
 
             RssFeedItemSelector.GetInsrance().SetDesiredType(desiredTypes);
@@ -134,10 +138,25 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(parent.getId() == monthSpinner.getId()) {
+
+            int monthNum = 1;
+            // get date value
+            try{
+                monthNum = Integer.parseInt(monthSpinner.getSelectedItem().toString());
+            } catch (NumberFormatException e) {
+            }
+
+            ArrayAdapter<Integer> dayAdapter = new DaySpinnerContainer(monthNum, this).GetSpinnerData();
+            daySpinner.setAdapter(dayAdapter);
+            daySpinner.setOnItemSelectedListener(this);
+
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }

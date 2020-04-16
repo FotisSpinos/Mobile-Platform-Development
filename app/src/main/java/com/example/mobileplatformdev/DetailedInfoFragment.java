@@ -47,9 +47,13 @@ public class DetailedInfoFragment extends Fragment {
         TextView titleText = (TextView) view.findViewById(R.id.description_title);
 
         // define title text formatting
-        titleText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+        layoutParams.setMargins(0, 40, 0, 0);
+        titleText.setLayoutParams(layoutParams);
+
         titleText.setGravity(Gravity.CENTER_HORIZONTAL);
         titleText.setTextSize(30);
+        titleText.setTextColor(Color.WHITE);
 
         Description desc;
 
@@ -113,7 +117,8 @@ public class DetailedInfoFragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 500, 200);
 
-        layoutParams.setMargins(30, 20, 30, 0);
+
+        layoutParams.setMargins(30, 0, 30, 0);
 
 
         // define layout params
