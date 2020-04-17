@@ -10,11 +10,12 @@ public class ParseUtils {
 
     public static Date ParseToRSSDate(String stringDate)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM YYYY - HH:mm");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMM yyyy - HH:mm" ); //, dd MMM YYYY - HH:mm
         Date outputDate = new Date();
 
         try {
-            outputDate = formatter.parse(stringDate);
+            outputDate = dateFormat.parse(stringDate);
 
         } catch (ParseException e) {
             e.printStackTrace();

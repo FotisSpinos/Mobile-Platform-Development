@@ -35,15 +35,13 @@ public class RssFeedItemSelector {
                 matchingType = true;
             }
         }
-
         return matchingType;
     }
 
     public boolean isItemDesired(RssFeedItem checkItem){
 
-        if(desiredRssItem == null)  //|| desiredType == ""
+        if(desiredRssItem == null)
             return true;
-
 
         //compare the dates
         if(checkItem.GetDescription().GetItem("Start Date") != null) {
@@ -63,15 +61,13 @@ public class RssFeedItemSelector {
         if(desiredRssItem.GetRssItemLocation().GetJunctions().get(0).equals(""))
             return true;
 
-        for(int i = 0; i < junctions.size(); i++){
-            if(!junctions.get(i).equals(desiredRssItem.GetRssItemLocation().GetJunctions().get(0)))
-                return true;
-        }
-
         return true;
     }
 
     public ArrayList<String> GetDesiredType() {
         return desiredTypes;
     }
+
+    //Getters
+    public RssFeedItem GetDesiredRssFeedItem() {return  desiredRssItem;}
 }

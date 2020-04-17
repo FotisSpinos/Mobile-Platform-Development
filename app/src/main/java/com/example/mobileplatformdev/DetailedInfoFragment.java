@@ -82,7 +82,7 @@ public class DetailedInfoFragment extends Fragment {
                 addSection("Start date", desc.GetItem("Start Date").GetValue().toString());
                 addSection("End date", desc.GetItem("End Date").GetValue().toString());
 
-                if(desc.GetItem(0) != null){
+                if(desc.GetItem(0) != null && !desc.GetItem("Start Date").GetValue().equals(desc.GetItem(0).GetValue())) {
                     DescriptionEntity tmp = (DescriptionEntity)(desc.GetItem(0).GetValue());
                     addSection("Status", tmp.GetValue().toString());
                     addSection("Details", tmp.GetTag());

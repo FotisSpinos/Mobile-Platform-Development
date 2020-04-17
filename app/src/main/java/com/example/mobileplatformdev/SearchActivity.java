@@ -42,7 +42,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private EditText roadEditText;
     private EditText junctionEditText;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
@@ -78,19 +77,41 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         ArrayAdapter<Integer> dayAdapter = new DaySpinnerContainer(1, this).GetSpinnerData();
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySpinner.setAdapter(dayAdapter);
-        daySpinner.setOnItemSelectedListener(this);
 
         // add elements to month spinner
         ArrayAdapter<Byte> monthAdapter = new MonthSpinnerContainer(this).GetSpinnerData();
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(monthAdapter);
-        monthSpinner.setOnItemSelectedListener(this);
 
         // add elements to year spinner
         ArrayAdapter<Integer> yearAdapter = new YearSpinnerDataContainer(2, this).GetSpinnerData();
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
-        yearSpinner.setOnItemSelectedListener(this);
+
+        /*
+        if(RssFeedItemSelector.GetInsrance().GetDesiredRssFeedItem() != null) {
+            Date date;
+
+            try {
+                date = (Date) RssFeedItemSelector.GetInsrance().GetDesiredRssFeedItem().GetDescription().GetItem("Start Date").GetValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            calendar.get(calendar.MONTH);
+        }
+
+         */
+    }
+
+    public String formatDateElement(String element){
+        if(daySpinner.getSelectedItem().toString().length() == 1){
+            return "0" + daySpinner.getSelectedItem().toString();
+        }
+        return element = daySpinner.getSelectedItem().toString();
     }
 
 
@@ -116,10 +137,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             Date desiredDate = new Date();
 
+            String day = formatDateElement(daySpinner.getSelectedItem().toString());
+            String month = formatDateElement(monthSpinner.getSelectedItem().toString());
+            String year = yearSpinner.getSelectedItem().toString();
+
             try {
-                    desiredDate = new SimpleDateFormat("dd mm yyyy").parse(daySpinner.getSelectedItem().toString() + " " +
-                        monthSpinner.getSelectedItem().toString() + " " +
-                        yearSpinner.getSelectedItem().toString());
+                    desiredDate = new SimpleDateFormat("dd MM yyyy").parse(day + " " +
+                        month + " " +
+                        year);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
