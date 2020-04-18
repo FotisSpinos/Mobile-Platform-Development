@@ -107,11 +107,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
          */
     }
 
-    public String formatDateElement(String element){
-        if(daySpinner.getSelectedItem().toString().length() == 1){
-            return "0" + daySpinner.getSelectedItem().toString();
+    public String formatDateElement(String element, Spinner spinner){
+        if(spinner.getSelectedItem().toString().length() == 1){
+            return "0" + spinner.getSelectedItem().toString();
         }
-        return element = daySpinner.getSelectedItem().toString();
+        return element = spinner.getSelectedItem().toString();
     }
 
 
@@ -137,8 +137,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             Date desiredDate = new Date();
 
-            String day = formatDateElement(daySpinner.getSelectedItem().toString());
-            String month = formatDateElement(monthSpinner.getSelectedItem().toString());
+            String day = formatDateElement(daySpinner.getSelectedItem().toString(), daySpinner);
+            String month = formatDateElement(monthSpinner.getSelectedItem().toString(), monthSpinner);
             String year = yearSpinner.getSelectedItem().toString();
 
             try {
