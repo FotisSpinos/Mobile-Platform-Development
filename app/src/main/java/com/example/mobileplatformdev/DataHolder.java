@@ -19,7 +19,6 @@ public class DataHolder {
     private static DataHolder instance;
 
     private DataHolder() {
-        // instantiate rss linked list
         rssData = new ArrayList<Hashtable<String, RssFeedItem>>();
         rssTags = new ArrayList<String>();
 
@@ -68,7 +67,6 @@ public class DataHolder {
     }
 
     public String GetTagFromRssItem(RssFeedItem rssFeedItem) {
-
         for (int i = 0; i < rssData.size(); i++){
 
             RssFeedItem item = rssData.get(i).get(rssFeedItem.GetPoint().ToString());

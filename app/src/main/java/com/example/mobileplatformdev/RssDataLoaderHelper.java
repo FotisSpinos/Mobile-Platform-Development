@@ -41,10 +41,10 @@ public class RssDataLoaderHelper
                     {
                         String tmp = xpp.nextText();
 
-                        int seperationIndex = tmp.indexOf('-');
+                        int separationIndex = tmp.indexOf('-');
 
-                        if (seperationIndex != -1)
-                            dataTag = tmp.substring(seperationIndex + 2, tmp.length() - 1);
+                        if (separationIndex != -1)
+                            dataTag = tmp.substring(separationIndex + 2, tmp.length() - 1);
                         else
                             dataTag =  tmp;
                     }

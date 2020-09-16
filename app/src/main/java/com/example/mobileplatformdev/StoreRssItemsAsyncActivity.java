@@ -20,33 +20,33 @@ public class StoreRssItemsAsyncActivity extends AsyncTask<String, Integer, Hasht
 
         Log.e("StoreRssItems", "thread started");
 
-        URL aurl;
+        URL url;
         URLConnection yc;
         BufferedReader in = null;
         String inputLine = "";
-        String stringdata = "";
+        String stringData = "";
 
         try
         {
-            aurl = new URL(strings[0]);
-            yc = aurl.openConnection();
+            url = new URL(strings[0]);
+            yc = url.openConnection();
             in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
 
             in.readLine();
 
             while ((inputLine = in.readLine()) != null)
             {
-                stringdata = stringdata + inputLine;
+                stringData = String.format("%s%s", stringData, inputLine);
             }
             in.close();
         }
         catch (IOException ae)
         {
-            Log.e("IO Exception: ", "Unable to read data from source: " + strings[0].toString() + " " + ae.getLocalizedMessage());
+            Log.e("IO Exception: ", String.format("%s %s %s", "Unable to read data from source:", strings[0].toString(), ae.getLocalizedMessage()));
         }
 
         // store the data
-        RssDataLoaderHelper.GetRecordedData(stringdata);
+        RssDataLoaderHelper.GetRecordedData(stringData);
 
         // store loaded data
         return rssData;

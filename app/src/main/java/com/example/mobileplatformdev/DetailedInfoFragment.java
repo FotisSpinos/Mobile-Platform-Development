@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.Date;
-
 public class DetailedInfoFragment extends Fragment {
 
     private RssFeedItem rssFeedItem;
@@ -64,8 +62,8 @@ public class DetailedInfoFragment extends Fragment {
         addSection("Road", rssFeedItem.GetRssItemLocation().GetRoad());
 
         switch (tag){
-            case RssFeedTypes.CURRENT_INSIDENT:
-                titleText.setText(RssFeedTypes.CURRENT_INSIDENT);
+            case RssFeedTypes.CURRENT_INCIDENT:
+                titleText.setText(RssFeedTypes.CURRENT_INCIDENT);
 
                 desc = rssFeedItem.GetDescription();
                 if(desc.GetItem(0) != null) {
@@ -90,7 +88,7 @@ public class DetailedInfoFragment extends Fragment {
                 break;
 
             case RssFeedTypes.ROADWORK:
-                titleText.setText("Current " + RssFeedTypes.ROADWORK);
+                titleText.setText(String.format("%s %s", "Current", RssFeedTypes.ROADWORK));
 
                 desc = rssFeedItem.GetDescription();
 
@@ -110,7 +108,6 @@ public class DetailedInfoFragment extends Fragment {
 
         // create description layout
         LinearLayout sectionLayout = new LinearLayout(view.getContext());
-        //sectionLayout.setRight(500);
 
         sectionLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -119,10 +116,6 @@ public class DetailedInfoFragment extends Fragment {
 
 
         layoutParams.setMargins(30, 0, 30, 0);
-
-
-        // define layout params
-        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(500, 200);
 
         // adds and returns view after adding tet view to the section layout
         sectionLayout = addTextViewToSection(title, layoutParams, sectionLayout);
@@ -143,12 +136,3 @@ public class DetailedInfoFragment extends Fragment {
         return currentLayout;
     }
 }
-
-/*
-        Button myButton = new Button(container.getContext());
-        myButton.setText("Add Me");
-        LinearLayout ll = (LinearLayout ) view.findViewById(R.id.linearLayout);
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ll.addView(myButton, lp);
-        */
-

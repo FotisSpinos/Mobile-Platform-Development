@@ -44,13 +44,6 @@ public class RssFeedItem {
 
         switch(type){
             case "Planned Roadwork":
-
-                //DescriptionEntity tmpItem = (DescriptionEntity) description.GetItem("Works");
-
-                if(mapDescription == null){
-                    //tmpItem = (DescriptionEntity) description.GetItem("Type");
-                }
-
                 int counter = 2;
 
                 mapDescription = "Starts at: ";
@@ -67,14 +60,14 @@ public class RssFeedItem {
 
             case "Current Incident":
                 try{
-                    mapDescription = description.GetItem("Insident").GetValue().toString();
+                    mapDescription = description.GetItem("Incident").GetValue().toString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
         }
 
-        this.mapDescription = type + ": " + mapDescription;
+        this.mapDescription = String.format("%s %s", ":", mapDescription);
 
         return mapDescription;
     }

@@ -13,7 +13,7 @@ public class RssFeedItemSelector {
 
     private RssFeedItemSelector(){}
 
-    public static RssFeedItemSelector GetInsrance(){
+    public static RssFeedItemSelector GetInstance(){
         if(instance == null){
             instance = new RssFeedItemSelector();
         }

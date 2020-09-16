@@ -2,7 +2,6 @@ package com.example.mobileplatformdev;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -11,21 +10,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobileplatformdev.R;
-
-import java.text.DateFormat;
-import java.text.FieldPosition;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.*;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener, OnItemSelectedListener {
@@ -64,14 +54,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         // add elements to type spinner
         ArrayList<String> arrayList = new ArrayList<>(3);
-        arrayList.add(0, RssFeedTypes.CURRENT_INSIDENT);
+        arrayList.add(0, RssFeedTypes.CURRENT_INCIDENT);
         arrayList.add(1, RssFeedTypes.ROADWORK);
         arrayList.add(2, RssFeedTypes.PLANNED_ROADWORK);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //typeSpinner.setAdapter(arrayAdapter);
-        //typeSpinner.setOnItemSelectedListener(this);
 
         // add elements to day spinner
         ArrayAdapter<Integer> dayAdapter = new DaySpinnerContainer(1, this).GetSpinnerData();
@@ -87,31 +75,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         ArrayAdapter<Integer> yearAdapter = new YearSpinnerDataContainer(2, this).GetSpinnerData();
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
-
-        /*
-        if(RssFeedItemSelector.GetInsrance().GetDesiredRssFeedItem() != null) {
-            Date date;
-
-            try {
-                date = (Date) RssFeedItemSelector.GetInsrance().GetDesiredRssFeedItem().GetDescription().GetItem("Start Date").GetValue();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            calendar.get(calendar.MONTH);
-        }
-
-         */
     }
 
     public String formatDateElement(String element, Spinner spinner){
         if(spinner.getSelectedItem().toString().length() == 1){
             return "0" + spinner.getSelectedItem().toString();
         }
-        return element = spinner.getSelectedItem().toString();
+        return spinner.getSelectedItem().toString();
     }
 
 
@@ -130,10 +100,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             if(plannedRoadworksCheckBox.isChecked())
                 desiredTypes.add(RssFeedTypes.PLANNED_ROADWORK);
             if(incidentCheckBox.isChecked())
-                desiredTypes.add(RssFeedTypes.CURRENT_INSIDENT);
+                desiredTypes.add(RssFeedTypes.CURRENT_INCIDENT);
 
 
-            RssFeedItemSelector.GetInsrance().SetDesiredType(desiredTypes);
+            RssFeedItemSelector.GetInstance().SetDesiredType(desiredTypes);
 
             Date desiredDate = new Date();
 
@@ -142,9 +112,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             String year = yearSpinner.getSelectedItem().toString();
 
             try {
-                    desiredDate = new SimpleDateFormat("dd MM yyyy").parse(day + " " +
-                        month + " " +
-                        year);
+                    String dateString = String.format("%d %d %d", day, month, year);
+                    desiredDate = new SimpleDateFormat("dd MM yyyy").parse(dateString);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -153,7 +122,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             desiredDescription.AddDescriptionEntity(new DescriptionEntity("Start Date", desiredDate));
             desiredItem.SetItemDescription(desiredDescription);
 
-            RssFeedItemSelector.GetInsrance().SetDesiredRssItem(desiredItem);
+            RssFeedItemSelector.GetInstance().SetDesiredRssItem(desiredItem);
 
             // load new map activity
             Intent myIntent = new Intent(this, MapActivity.class);

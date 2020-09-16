@@ -111,8 +111,6 @@ public class RssItemLocation {
             return false;
 
         Log.println(Log.ERROR, "ParsingError", xmlData);
-        int xmlDataLenghth = xmlData.length();
-        int endd = end;
 
         try{
             String junctionText = xmlData.substring(start, end);

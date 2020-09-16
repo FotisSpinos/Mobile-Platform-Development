@@ -6,5 +6,5 @@ public class RssFeedTypes {
 
     public static final String PLANNED_ROADWORK = "Planned Roadwork";
     public static final String ROADWORK = "Roadwork";
-    public static final String CURRENT_INSIDENT = "Current Incident";
+    public static final String CURRENT_INCIDENT = "Current Incident";
 }

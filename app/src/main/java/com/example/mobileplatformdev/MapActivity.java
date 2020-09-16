@@ -30,7 +30,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ImageButton settingsButton;
     private Button infoButton;
     private DetailedInfoFragment descFragment;
-    private Button refreashButton;
+    private Button refreshButton;
 
     private Marker currentMarker;
 
@@ -51,8 +51,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         searchView = (SearchView) findViewById(R.id.search_view);
 
-        refreashButton = (Button) findViewById(R.id.refresh_button);
-        refreashButton.setOnClickListener(this);
+        refreshButton = (Button) findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(this);
 
         // create description fragment
         descFragment = new DetailedInfoFragment();
@@ -63,7 +63,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.clear();
 
         // refresh data
-        String urls[] = {RssUrl.INSIDENTS_URL, RssUrl.ROADWORKS_URL, RssUrl.PLANNED_ROADWORKS_URL};
+        String urls[] = {RssUrl.INCIDENTS_URL, RssUrl.ROADWORKS_URL, RssUrl.PLANNED_ROADWORKS_URL};
 
         DataHolder.GetInstance().RefreshData(urls);
 
@@ -106,7 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         float markerColor = BitmapDescriptorFactory.HUE_VIOLET;
 
-        if(tag.equals(RssFeedTypes.CURRENT_INSIDENT))
+        if(tag.equals(RssFeedTypes.CURRENT_INCIDENT))
             markerColor = BitmapDescriptorFactory.HUE_RED;
         else if(tag.equals(RssFeedTypes.PLANNED_ROADWORK))
             markerColor = BitmapDescriptorFactory.HUE_GREEN;
@@ -124,7 +124,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onClick(View v) {
 
-        switch(v.getId()){
+        switch(v.getId()) {
             case R.id.settings_button:
                 DataHolder.GetInstance().StopActivities();
 
@@ -133,35 +133,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
 
             case R.id.refresh_button:
-                    RefreshMapData();
+                RefreshMapData();
                 break;
 
             case R.id.rss_info_button:
-                //googleMap.clear();
-
-                //RssWindowAdapter windowAdapter = new RssWindowAdapter(MapActivity.this);
-                //googleMap.setInfoWindowAdapter(windowAdapter);
-
-                //windowAdapter.ShowRssInfo(currentMarker, findViewById(R.id.map));
-                //windowAdapter.ShowRssInfo();
-
-                //replaces fragment
-                if(currentMarker == null)
+                if (currentMarker == null)
                     break;
 
-                if(!descFragment.isVisible()) {
+                if (!descFragment.isVisible()) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.description_container, descFragment)
                             .commit();
-                    descFragment.setRssFeedItem( DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude)));
-                }
-                else
+                    descFragment.setRssFeedItem(DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude)));
+                } else
                     getSupportFragmentManager().beginTransaction().remove(descFragment).commit();
 
 
-                if(currentMarker == null)
+                if (currentMarker == null)
                     return;
-
-                //RssFeedItem item = DataHolder.GetInstance().GetRssItemWithPoint(new Point(currentMarker.getPosition().latitude, currentMarker.getPosition().longitude));
                 break;
         }
     }

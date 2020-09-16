@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 public class Description {
-    //private HashMap<String, Object> descriptionEntities;
     private LinkedList<DescriptionEntity> descriptionEntities;
 
     public Description(){
@@ -24,7 +23,7 @@ public class Description {
         if(lastDateIndex == 0 &&
         descriptionEntities.isEmpty())
         {
-            descriptionEntities.push(new DescriptionEntity("Insident", xmlDescriptionData));
+            descriptionEntities.push(new DescriptionEntity("Incident", xmlDescriptionData));
             return;
         }
 
@@ -51,7 +50,6 @@ public class Description {
                         //store tag and value
                         tag = xmlDescriptionData.substring(elementIndex, y);
                         String stringValue = xmlDescriptionData.substring(y + 2, i + 1);
-                        //value = xmlDescriptionData.substring(y + 2, i + 1);    // the only difference, optimise this in a function?
 
 
                         value = ParseUtils.ParseToRSSDate(stringValue);
@@ -71,7 +69,7 @@ public class Description {
                     if (xmlDescriptionData.charAt(y) == ':') {
                         //store tag and value
                         tag = xmlDescriptionData.substring(elementIndex, y);
-                        String stringValue = xmlDescriptionData.substring(y + 2, i);    // the only difference, optimise this in a function?
+                        String stringValue = xmlDescriptionData.substring(y + 2, i);
 
                         value = ParseUtils.ParseToRSSDate(stringValue);
                         // add rss element
@@ -116,19 +114,15 @@ public class Description {
                     descriptionEntities.push(new DescriptionEntity(tag, value));
 
                     elementIndex = i - 1;
-                    //elementIndex = i;
                     break;
 
                 case ':':
                     if (!encounter) {
-                        value = xmlDescriptionData.substring(i + 1, elementIndex + 1);  // elementIndex + 1
+                        value = xmlDescriptionData.substring(i + 1, elementIndex + 1);
                         elementIndex = i - 1;
                         encounter = true;
                     } else if (encounter) {
-                        tag = xmlDescriptionData.substring(i + 1, elementIndex + 1); // elementIndex + 1
-                        //descriptionEntities.put(tag, value);
-
-                        //change this later
+                        tag = xmlDescriptionData.substring(i + 1, elementIndex + 1);
                         value = new DescriptionEntity(tag, value);
 
                         elementIndex = i - 1;
@@ -136,12 +130,8 @@ public class Description {
             }
         }
 
-        //String debugDesc = xmlDescriptionData;
-        //Log.println(Log.INFO,"debug tag", "data: " + xmlDescriptionData + "\nlength: " + xmlDescriptionData.length() + "\n from: " + Integer.toString(startIndex) + " to: " + Integer.toString(elementIndex));
-
         // add the final element
         tag = xmlDescriptionData.substring(startIndex, elementIndex + 1);
-
 
         descriptionEntities.push(new DescriptionEntity(tag, value));
     }

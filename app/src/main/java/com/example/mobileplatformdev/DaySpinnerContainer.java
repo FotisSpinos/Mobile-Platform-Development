@@ -16,7 +16,7 @@ public class DaySpinnerContainer implements SpinnerDataContainer<Integer> {
         this.context = context;
 
         if(month <= 0 || month > 12) {
-            throw new IllegalArgumentException("The month retrieved is invalid " + "month value: " + month);
+            throw new IllegalArgumentException(String.format("%s %n", "The month retrieved is invalid. month value:", month));
         }
 
         else if(month == 2){
