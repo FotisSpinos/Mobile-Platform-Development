@@ -46,14 +46,14 @@ public class RssFeedItem {
             case "Planned Roadwork":
                 int counter = 2;
 
-                mapDescription = "Starts at: ";
+                mapDescription = "Starts on: ";
                 mapDescription += description.GetItem("Start Date").GetValue().toString();
 
                 break;
 
             case "Roadwork":
                 try {
-                    mapDescription = "Ends at: ";
+                    mapDescription = "Ends on: ";
                     mapDescription += description.GetItem("End Date").GetValue().toString();
                 } catch (Exception e) {}
                 break;

@@ -101,7 +101,9 @@ public class AddRssItemsToMapAsyncActivity extends AsyncTask<MapActivity, Intege
                 RssFeedItem item = rssItems.get(key);
 
                 if(RssFeedItemSelector.GetInstance().isItemDesired(item))
+                {
                     mapActivity.AddMapPoint(item);
+                }
             }
         }
     }
